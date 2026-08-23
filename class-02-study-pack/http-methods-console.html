@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HTTP methods and status codes — console</title>
+<style>
+:root{--bg:#FAFAF7;--card:#F1EFE8;--txt:#2C2C2A;--sec:#5F5E5A;--b:#B4B2A9}
+@media (prefers-color-scheme:dark){:root{--bg:#1A1A18;--card:#262624;--txt:#EDEDE8;--sec:#B4B2A9;--b:#5F5E5A}}
+body{margin:0;padding:2rem 1rem;background:var(--bg);color:var(--txt);
+font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.7}
+main{max-width:760px;margin:0 auto}
+h1{font-size:22px;font-weight:500;margin:0 0 .25rem}
+p.lede{color:var(--sec);margin:0 0 1.5rem;font-size:15px}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;white-space:pre-wrap;margin:0;line-height:1.6}
+.pane{background:var(--card);border-radius:8px;padding:1rem;min-height:150px}
+.lbl{font-size:12px;color:var(--sec);margin:0 0 8px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+@media (max-width:640px){.grid{grid-template-columns:1fr}}
+.bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+button{font:inherit;font-size:13px;background:transparent;color:var(--txt);border:.5px solid var(--b);
+border-radius:8px;padding:6px 12px;cursor:pointer}button:hover{background:var(--card)}
+</style></head><body><main>
+<h1>HTTP methods and status codes</h1>
+<p class="lede">Class 02 &sect;4.2 &mdash; a fake uptime-check API. Press the same button twice to find out which methods are idempotent.</p>
+
+<p class="lbl">Send a request to <span class="mono">https://api.chatapp.com/v1/checks</span></p>
+<div class="bar">
+<button onclick="go('LIST')">GET collection</button><button onclick="go('GETONE')">GET /41</button>
+<button onclick="go('POST')">POST</button><button onclick="go('PUT')">PUT /41</button>
+<button onclick="go('PATCH')">PATCH /41</button><button onclick="go('DELETE')">DELETE /41</button></div>
+<p class="lbl">Or force a failure class</p>
+<div class="bar">
+<button onclick="go('R301')">301</button><button onclick="go('R401')">401</button>
+<button onclick="go('R403')">403</button><button onclick="go('R404')">404</button>
+<button onclick="go('R429')">429</button><button onclick="go('R500')">500</button>
+<button onclick="go('RESET')">reset</button></div>
+
+<div class="grid">
+<div class="pane"><p class="lbl">Request</p><p class="mono" id="req">press a button</p></div>
+<div class="pane"><p class="lbl">Response</p><p class="mono" id="res">&mdash;</p></div></div>
+<div class="pane" style="margin-top:12px;min-height:0"><p class="lbl">Server state</p><p class="mono" id="db">&mdash;</p></div>
+<div class="pane" style="margin-top:12px;min-height:0"><p class="lbl">What just happened</p>
+<p id="note" style="margin:0;font-size:14px">Press the same button twice to see which methods are idempotent.</p></div>
+
+<script>
+var db,nextId,last,req=document.getElementById("req"),res=document.getElementById("res"),
+dbv=document.getElementById("db"),note=document.getElementById("note");
+function init(){db=[{id:41,url:"chatapp.com",every:60}];nextId=42;last=null;}
+function color(c){var d=String(c)[0];return d==="2"?"#1D9E75":d==="3"?"#D85A30":"#E24B4A";}
+function draw(){dbv.textContent=db.length?db.map(function(r){
+return "check "+r.id+"  url="+r.url+"  every="+r.every+"s";}).join("\n"):"(no checks)";}
+function show(rq,code,reason,hdrs,body,msg){
+req.textContent=rq;
+res.innerHTML='<span style="color:'+color(code)+'">HTTP/1.1 '+code+" "+reason+"</span>\n"+hdrs+(body?"\n\n"+body:"");
+note.textContent=msg;draw();}
+function go(k){
+if(k==="RESET"){init();req.textContent="press a button";res.textContent="\u2014";
+note.textContent="State reset.";draw();return;}
+var rep=(k===last);last=k;var one=db.filter(function(r){return r.id===41;})[0];
+if(k==="LIST")show("GET /v1/checks HTTP/1.1\nHost: api.chatapp.com",200,"OK",
+"Content-Type: application/json",JSON.stringify(db),
+"GET is safe \u2014 it read the state and changed nothing. Press it all day.");
+else if(k==="GETONE")one?show("GET /v1/checks/41 HTTP/1.1\nHost: api.chatapp.com",200,"OK",
+"Content-Type: application/json\nETag: \"a1f3\"",JSON.stringify(one),
+"Safe and idempotent. The ETag is how the client asks 'has this changed?' next time.")
+:show("GET /v1/checks/41 HTTP/1.1",404,"Not Found","Content-Type: application/json",
+'{"error":"no such check"}',"You deleted it earlier. 404 means the client asked for something that is not here.");
+else if(k==="POST"){var n={id:nextId++,url:"example.com",every:60};db.push(n);
+show("POST /v1/checks HTTP/1.1\nHost: api.chatapp.com\nContent-Type: application/json\n\n"+
+'{"url":"example.com","every":60}',201,"Created","Location: /v1/checks/"+n.id,
+JSON.stringify(n),rep?"You pressed POST twice and there are now two extra checks. POST is NOT idempotent \u2014 this is exactly why a timed-out POST is dangerous to retry blindly.":
+"201 Created, and Location tells the client where the new thing lives.");}
+else if(k==="PUT"){if(!one){one={id:41};db.push(one);}one.url="chatapp.com";one.every=30;
+show("PUT /v1/checks/41 HTTP/1.1\nHost: api.chatapp.com\nContent-Type: application/json\n\n"+
+'{"url":"chatapp.com","every":30}',200,"OK","Content-Type: application/json",JSON.stringify(one),
+rep?"Pressed twice, and the state is identical to one press. PUT is idempotent \u2014 safe to retry after a timeout.":
+"PUT replaced the whole resource. Any field you left out would be gone.");}
+else if(k==="PATCH"){if(!one){show("PATCH /v1/checks/41 HTTP/1.1",404,"Not Found","","",
+"Nothing to patch \u2014 it was deleted.");return;}one.every=one.every===60?120:60;
+show("PATCH /v1/checks/41 HTTP/1.1\nHost: api.chatapp.com\nContent-Type: application/json\n\n"+
+'{"every":'+one.every+"}",200,"OK","Content-Type: application/json",JSON.stringify(one),
+rep?"This PATCH toggles a value, so pressing it twice undid the first \u2014 a PATCH is only idempotent if you write it that way.":
+"PATCH changed one field and left the rest alone.");}
+else if(k==="DELETE"){if(one){db=db.filter(function(r){return r.id!==41;});
+show("DELETE /v1/checks/41 HTTP/1.1\nHost: api.chatapp.com",204,"No Content",
+"(no body \u2014 that is what 204 means)","","Gone. Press it again and watch the status change but not the state.");}
+else show("DELETE /v1/checks/41 HTTP/1.1",404,"Not Found","Content-Type: application/json",
+'{"error":"no such check"}',"The effect is idempotent \u2014 it is still deleted \u2014 but the status code differs. Both designs are defensible; pick one and document it.");}
+else if(k==="R301")show("GET /checks HTTP/1.1\nHost: api.chatapp.com",301,"Moved Permanently",
+"Location: /v1/checks","","3xx: go elsewhere. Your monitor has to decide whether following a redirect counts as 'up'.");
+else if(k==="R401")show("GET /v1/checks HTTP/1.1\n(no Authorization header)",401,"Unauthorized",
+"WWW-Authenticate: Bearer",'{"error":"missing token"}',"401 = I do not know who you are. Send credentials.");
+else if(k==="R403")show("DELETE /v1/checks/41 HTTP/1.1\nAuthorization: Bearer eyJ\u2026",403,"Forbidden",
+"Content-Type: application/json",'{"error":"read-only key"}',"403 = I know exactly who you are, and no. Re-authenticating will not help.");
+else if(k==="R404")show("GET /v1/checks/9999 HTTP/1.1",404,"Not Found","Content-Type: application/json",
+'{"error":"no such check"}',"4xx is the client's mistake. Nothing is broken on the server.");
+else if(k==="R429")show("GET /v1/checks HTTP/1.1",429,"Too Many Requests",
+"Retry-After: 30",'{"error":"slow down"}',"429 with Retry-After tells you exactly when to come back. Respect it instead of guessing.");
+else if(k==="R500")show("POST /v1/checks HTTP/1.1",500,"Internal Server Error","Content-Type: application/json",
+'{"error":"database unreachable"}',"5xx is ours. Note the difference from 502/504, which point at a proxy or a dead upstream instead of your code.");
+}
+init();draw();
+</script></main></body></html>

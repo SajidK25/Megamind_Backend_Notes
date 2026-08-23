@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="320" viewBox="0 0 680 320" role="img">
+<title>Every HTTP status class, and who has to fix it</title>
+<desc>1xx, 2xx, 3xx, 4xx and 5xx shown in turn with their meaning, common codes, and whether the client or the server is the one that must act.</desc>
+<style>
+.ts{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:12px;fill:#5F5E5A}
+.tb{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;fill:#2C2C2A}
+.th{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;font-weight:500;fill:#2C2C2A}
+.tp{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:13px;font-weight:500;fill:#993C1D}
+.mv{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px;font-weight:600;fill:#5F5E5A}
+.m{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;fill:#2C2C2A}
+.pill{fill:none;stroke:#B4B2A9}
+.hl{fill:#FBEED9;stroke:#D8A03D}
+.panel{fill:#F1EFE8}
+.who{fill:none;stroke:#B4B2A9}
+.whoOn{fill:#EEEDFE;stroke:#7F77DD}
+@media (prefers-color-scheme:dark){
+.ts{fill:#B4B2A9}.tb{fill:#EDEDE8}.th{fill:#EDEDE8}.tp{fill:#F0997B}.mv{fill:#B4B2A9}.m{fill:#EDEDE8}
+.pill{stroke:#5F5E5A}.hl{fill:#854F0B;stroke:#FAC775}.panel{fill:#262624}
+.who{stroke:#5F5E5A}.whoOn{fill:#3C3489;stroke:#AFA9EC}}
+</style>
+
+<rect class="pill" x="41" y="40" width="110" height="38" rx="19" stroke-width="0.5"/>
+<rect class="pill" x="163" y="40" width="110" height="38" rx="19" stroke-width="0.5"/>
+<rect class="pill" x="285" y="40" width="110" height="38" rx="19" stroke-width="0.5"/>
+<rect class="pill" x="407" y="40" width="110" height="38" rx="19" stroke-width="0.5"/>
+<rect class="pill" x="529" y="40" width="110" height="38" rx="19" stroke-width="0.5"/>
+<rect class="hl" x="41" y="40" width="110" height="38" rx="19" stroke-width="1.5">
+<animate attributeName="x" calcMode="discrete" values="41;163;285;407;529" keyTimes="0;0.2;0.4;0.6;0.8" dur="20s" repeatCount="indefinite"/></rect>
+<text class="mv" x="96" y="65" text-anchor="middle">1xx</text>
+<text class="mv" x="218" y="65" text-anchor="middle">2xx</text>
+<text class="mv" x="340" y="65" text-anchor="middle">3xx</text>
+<text class="mv" x="462" y="65" text-anchor="middle">4xx</text>
+<text class="mv" x="584" y="65" text-anchor="middle">5xx</text>
+
+<rect class="panel" x="40" y="100" width="600" height="130" rx="8"/>
+
+<g>
+<text class="th" x="64" y="132">Hold on, I am still going.</text>
+<text class="m" x="64" y="158">100 Continue · 101 Switching Protocols</text>
+<text class="tb" x="64" y="186">Rare in application code. 101 is how a WebSocket upgrade begins.</text>
+<text class="tp" x="64" y="212">Not an outcome — nothing has been decided yet.</text>
+<animate attributeName="opacity" calcMode="discrete" values="1;0" keyTimes="0;0.2" dur="20s" repeatCount="indefinite"/></g>
+
+<g opacity="0">
+<text class="th" x="64" y="132">It worked.</text>
+<text class="m" x="64" y="158">200 OK · 201 Created · 204 No Content</text>
+<text class="tb" x="64" y="186">201 carries a Location header. 204 promises there is no body at all.</text>
+<text class="tp" x="64" y="212">Nobody is at fault. Return the most specific one that fits.</text>
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.2;0.4" dur="20s" repeatCount="indefinite"/></g>
+
+<g opacity="0">
+<text class="th" x="64" y="132">Go elsewhere, or reuse what you already have.</text>
+<text class="m" x="64" y="158">301 Moved Permanently · 302 Found · 304 Not Modified</text>
+<text class="tb" x="64" y="186">304 is the cheapest response there is: a header, and no body.</text>
+<text class="tp" x="64" y="212">The client acts — by following, or by using its cached copy.</text>
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.4;0.6" dur="20s" repeatCount="indefinite"/></g>
+
+<g opacity="0">
+<text class="th" x="64" y="132">The client asked wrong.</text>
+<text class="m" x="64" y="158">400 · 401 · 403 · 404 · 429</text>
+<text class="tb" x="64" y="186">401 = I do not know you. 403 = I know you, and no. Retrying 403 never helps.</text>
+<text class="tp" x="64" y="212">Nothing is broken. Fix the request, or wait out the Retry-After.</text>
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.6;0.8" dur="20s" repeatCount="indefinite"/></g>
+
+<g opacity="0">
+<text class="th" x="64" y="132">Our side failed.</text>
+<text class="m" x="64" y="158">500 · 502 Bad Gateway · 504 Gateway Timeout</text>
+<text class="tb" x="64" y="186">500 is your code. 502 and 504 are the proxy saying your app is dead or too slow.</text>
+<text class="tp" x="64" y="212">That distinction decides whether you open the code or the infrastructure.</text>
+<animate attributeName="opacity" calcMode="discrete" values="0;1" keyTimes="0;0.8" dur="20s" repeatCount="indefinite"/></g>
+
+<text class="ts" x="340" y="258" text-anchor="middle">who has to act</text>
+<rect class="who" x="180" y="268" width="140" height="34" rx="17" stroke-width="0.5"/>
+<text class="tb" x="250" y="290" text-anchor="middle">the client</text>
+<rect class="who" x="360" y="268" width="140" height="34" rx="17" stroke-width="0.5"/>
+<text class="tb" x="430" y="290" text-anchor="middle">the server</text>
+<rect class="whoOn" x="180" y="268" width="140" height="34" rx="17" stroke-width="1.5" opacity="0">
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.4;0.8" dur="20s" repeatCount="indefinite"/></rect>
+<rect class="whoOn" x="360" y="268" width="140" height="34" rx="17" stroke-width="1.5" opacity="0">
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0;1" keyTimes="0;0.2;0.4;0.8" dur="20s" repeatCount="indefinite"/></rect>
+</svg>

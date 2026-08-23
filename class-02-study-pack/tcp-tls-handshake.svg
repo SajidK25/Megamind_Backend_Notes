@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="530" viewBox="0 0 680 530" role="img">
+<title>TCP three-way handshake followed by the TLS handshake</title>
+<desc>A client and server exchange SYN, SYN-ACK and ACK, then a TLS 1.3 handshake, then the actual HTTP request and response — three round trips before the first byte arrives.</desc>
+<style>
+.th{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;font-weight:500;fill:#2C2C2A}
+.ts{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:12px;fill:#5F5E5A}
+.tp{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:12px;font-weight:500;fill:#993C1D}
+.m{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;fill:#2C2C2A}
+.box{fill:#F1EFE8;stroke:#888780}
+.life{stroke:#B4B2A9}
+.out{stroke:#7F77DD}.outf{fill:#7F77DD}
+.in{stroke:#1D9E75}.inf{fill:#1D9E75}
+.panel{fill:#F1EFE8}
+@media (prefers-color-scheme:dark){
+.th{fill:#EDEDE8}.ts{fill:#B4B2A9}.tp{fill:#F0997B}.m{fill:#EDEDE8}
+.box{fill:#2C2C2A;stroke:#B4B2A9}.life{stroke:#5F5E5A}
+.out{stroke:#AFA9EC}.outf{fill:#AFA9EC}.in{stroke:#5DCAA5}.inf{fill:#5DCAA5}.panel{fill:#262624}}
+</style>
+
+<rect class="box" x="50" y="40" width="120" height="40" rx="8" stroke-width="0.5"/>
+<text class="th" x="110" y="65" text-anchor="middle">Client</text>
+<rect class="box" x="510" y="40" width="120" height="40" rx="8" stroke-width="0.5"/>
+<text class="th" x="570" y="65" text-anchor="middle">Server</text>
+<line class="life" x1="110" y1="80" x2="110" y2="465" stroke-width="0.5" stroke-dasharray="3 4"/>
+<line class="life" x1="570" y1="80" x2="570" y2="465" stroke-width="0.5" stroke-dasharray="3 4"/>
+
+<text class="tp" x="110" y="108">TCP handshake · 1 round trip</text>
+<text class="ts" x="340" y="122" text-anchor="middle" opacity="0">SYN · "can we talk?"
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.04;0.97" dur="13s" repeatCount="indefinite"/></text>
+<line class="out" x1="110" y1="130" x2="570" y2="130" stroke-width="1.5" stroke-dasharray="460" stroke-dashoffset="460" opacity="0">
+<animate attributeName="stroke-dashoffset" values="460;460;0;0;460" keyTimes="0;0.04;0.11;0.97;0.98" dur="13s" repeatCount="indefinite"/>
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.04;0.97" dur="13s" repeatCount="indefinite"/></line>
+<polygon class="outf" points="562,125 570,130 562,135" opacity="0">
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.11;0.97" dur="13s" repeatCount="indefinite"/></polygon>
+
+<text class="ts" x="340" y="162" text-anchor="middle" opacity="0">SYN-ACK · "yes, and can we?"
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.13;0.97" dur="13s" repeatCount="indefinite"/></text>
+<line class="in" x1="570" y1="170" x2="110" y2="170" stroke-width="1.5" stroke-dasharray="460" stroke-dashoffset="460" opacity="0">
+<animate attributeName="stroke-dashoffset" values="460;460;0;0;460" keyTimes="0;0.13;0.20;0.97;0.98" dur="13s" repeatCount="indefinite"/>
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.13;0.97" dur="13s" repeatCount="indefinite"/></line>
+<polygon class="inf" points="118,165 110,170 118,175" opacity="0">
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.20;0.97" dur="13s" repeatCount="indefinite"/></polygon>
+
+<text class="ts" x="340" y="202" text-anchor="middle" opacity="0">ACK · "yes. go."
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.22;0.97" dur="13s" repeatCount="indefinite"/></text>
+<line class="out" x1="110" y1="210" x2="570" y2="210" stroke-width="1.5" stroke-dasharray="460" stroke-dashoffset="460" opacity="0">
+<animate attributeName="stroke-dashoffset" values="460;460;0;0;460" keyTimes="0;0.22;0.29;0.97;0.98" dur="13s" repeatCount="indefinite"/>
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.22;0.97" dur="13s" repeatCount="indefinite"/></line>
+<polygon class="outf" points="562,205 570,210 562,215" opacity="0">
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.29;0.97" dur="13s" repeatCount="indefinite"/></polygon>
+
+<text class="tp" x="110" y="251">TLS 1.3 handshake · 1 more round trip</text>
+<text class="ts" x="340" y="265" text-anchor="middle" opacity="0">ClientHello + key share
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.33;0.97" dur="13s" repeatCount="indefinite"/></text>
+<line class="out" x1="110" y1="273" x2="570" y2="273" stroke-width="1.5" stroke-dasharray="460" stroke-dashoffset="460" opacity="0">
+<animate attributeName="stroke-dashoffset" values="460;460;0;0;460" keyTimes="0;0.33;0.40;0.97;0.98" dur="13s" repeatCount="indefinite"/>
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.33;0.97" dur="13s" repeatCount="indefinite"/></line>
+<polygon class="outf" points="562,268 570,273 562,278" opacity="0">
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.40;0.97" dur="13s" repeatCount="indefinite"/></polygon>
+
+<text class="ts" x="340" y="305" text-anchor="middle" opacity="0">ServerHello + certificate
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.42;0.97" dur="13s" repeatCount="indefinite"/></text>
+<line class="in" x1="570" y1="313" x2="110" y2="313" stroke-width="1.5" stroke-dasharray="460" stroke-dashoffset="460" opacity="0">
+<animate attributeName="stroke-dashoffset" values="460;460;0;0;460" keyTimes="0;0.42;0.49;0.97;0.98" dur="13s" repeatCount="indefinite"/>
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.42;0.97" dur="13s" repeatCount="indefinite"/></line>
+<polygon class="inf" points="118,308 110,313 118,318" opacity="0">
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.49;0.97" dur="13s" repeatCount="indefinite"/></polygon>
+
+<text class="ts" x="340" y="345" text-anchor="middle" opacity="0">Finished · encrypted from here on
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.51;0.97" dur="13s" repeatCount="indefinite"/></text>
+<line class="out" x1="110" y1="353" x2="570" y2="353" stroke-width="1.5" stroke-dasharray="460" stroke-dashoffset="460" opacity="0">
+<animate attributeName="stroke-dashoffset" values="460;460;0;0;460" keyTimes="0;0.51;0.58;0.97;0.98" dur="13s" repeatCount="indefinite"/>
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.51;0.97" dur="13s" repeatCount="indefinite"/></line>
+<polygon class="outf" points="562,348 570,353 562,358" opacity="0">
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.58;0.97" dur="13s" repeatCount="indefinite"/></polygon>
+
+<text class="tp" x="110" y="391">Only now does your request move</text>
+<text class="m" x="340" y="405" text-anchor="middle" opacity="0">GET /v1/messages
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.62;0.97" dur="13s" repeatCount="indefinite"/></text>
+<line class="out" x1="110" y1="413" x2="570" y2="413" stroke-width="1.5" stroke-dasharray="460" stroke-dashoffset="460" opacity="0">
+<animate attributeName="stroke-dashoffset" values="460;460;0;0;460" keyTimes="0;0.62;0.69;0.97;0.98" dur="13s" repeatCount="indefinite"/>
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.62;0.97" dur="13s" repeatCount="indefinite"/></line>
+<polygon class="outf" points="562,408 570,413 562,418" opacity="0">
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.69;0.97" dur="13s" repeatCount="indefinite"/></polygon>
+
+<text class="m" x="340" y="445" text-anchor="middle" opacity="0">200 OK
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.71;0.97" dur="13s" repeatCount="indefinite"/></text>
+<line class="in" x1="570" y1="453" x2="110" y2="453" stroke-width="1.5" stroke-dasharray="460" stroke-dashoffset="460" opacity="0">
+<animate attributeName="stroke-dashoffset" values="460;460;0;0;460" keyTimes="0;0.71;0.78;0.97;0.98" dur="13s" repeatCount="indefinite"/>
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.71;0.97" dur="13s" repeatCount="indefinite"/></line>
+<polygon class="inf" points="118,448 110,453 118,458" opacity="0">
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.78;0.97" dur="13s" repeatCount="indefinite"/></polygon>
+
+<rect class="panel" x="40" y="478" width="600" height="34" rx="8"/>
+<text class="ts" x="52" y="500">elapsed at 80 ms round-trip time</text>
+<text class="m" x="300" y="500">0 ms
+<animate attributeName="opacity" calcMode="discrete" values="1;0" keyTimes="0;0.20" dur="13s" repeatCount="indefinite"/></text>
+<text class="m" x="300" y="500" opacity="0">80 ms · connected
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.20;0.49" dur="13s" repeatCount="indefinite"/></text>
+<text class="m" x="300" y="500" opacity="0">160 ms · encrypted
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.49;0.78" dur="13s" repeatCount="indefinite"/></text>
+<text class="m" x="300" y="500" opacity="0">240 ms · first byte of the answer
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.78;0.97" dur="13s" repeatCount="indefinite"/></text>
+</svg>

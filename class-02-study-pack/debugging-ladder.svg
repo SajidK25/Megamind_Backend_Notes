@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="420" viewBox="0 0 680 420" role="img">
+<title>The five-link debugging ladder, stopping at the first failure</title>
+<desc>Each rung is checked in order — name delegated, record exists, port open, app answers, answer correct. The port check fails, so everything below it is unknown rather than working.</desc>
+<style>
+.th{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;font-weight:500;fill:#2C2C2A}
+.ts{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:12px;fill:#5F5E5A}
+.tp{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;font-weight:500;fill:#993C1D}
+.tb{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;fill:#2C2C2A}
+.m{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;fill:#5F5E5A}
+.row{fill:#F1EFE8;stroke:#B4B2A9}
+.okp{fill:#EAF3DE;stroke:#639922}.okt{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;fill:#3B6D11}
+.bad{fill:#FCEBEB;stroke:#E24B4A}.badt{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;fill:#A32D2D}
+.unk{fill:none;stroke:#B4B2A9}.unkt{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;fill:#888780}
+.panel{fill:#F1EFE8}
+@media (prefers-color-scheme:dark){
+.th{fill:#EDEDE8}.ts{fill:#B4B2A9}.tp{fill:#F0997B}.tb{fill:#EDEDE8}.m{fill:#B4B2A9}
+.row{fill:#262624;stroke:#5F5E5A}
+.okp{fill:#27500A;stroke:#97C459}.okt{fill:#C0DD97}
+.bad{fill:#791F1F;stroke:#F09595}.badt{fill:#F7C1C1}
+.unk{stroke:#5F5E5A}.unkt{fill:#888780}.panel{fill:#262624}}
+</style>
+
+<rect class="row" x="40" y="40" width="600" height="52" rx="8" stroke-width="0.5"/>
+<text class="th" x="60" y="63">1 · Is the name delegated?</text>
+<text class="m" x="60" y="82">dig chatapp.com NS +short</text>
+<g opacity="0"><rect class="okp" x="516" y="52" width="104" height="28" rx="14" stroke-width="0.5"/>
+<text class="okt" x="568" y="71" text-anchor="middle">ok</text>
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.10;0.97" dur="14s" repeatCount="indefinite"/></g>
+
+<rect class="row" x="40" y="106" width="600" height="52" rx="8" stroke-width="0.5"/>
+<text class="th" x="60" y="129">2 · Does the record exist?</text>
+<text class="m" x="60" y="148">dig chatapp.com A +short</text>
+<g opacity="0"><rect class="okp" x="516" y="118" width="104" height="28" rx="14" stroke-width="0.5"/>
+<text class="okt" x="568" y="137" text-anchor="middle">203.0.113.42</text>
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.25;0.97" dur="14s" repeatCount="indefinite"/></g>
+
+<rect class="row" x="40" y="172" width="600" height="52" rx="8" stroke-width="0.5"/>
+<text class="th" x="60" y="195">3 · Is the port open?</text>
+<text class="m" x="60" y="214">nc -zv 203.0.113.42 443</text>
+<g opacity="0"><rect class="bad" x="516" y="184" width="104" height="28" rx="14" stroke-width="0.5"/>
+<text class="badt" x="568" y="203" text-anchor="middle">refused</text>
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.40;0.97" dur="14s" repeatCount="indefinite"/></g>
+
+<rect class="row" x="40" y="238" width="600" height="52" rx="8" stroke-width="0.5"/>
+<text class="th" x="60" y="261">4 · Does the app answer?</text>
+<text class="m" x="60" y="280">curl -I https://chatapp.com</text>
+<g opacity="0"><rect class="unk" x="516" y="250" width="104" height="28" rx="14" stroke-width="0.5" stroke-dasharray="4 4"/>
+<text class="unkt" x="568" y="269" text-anchor="middle">unknown</text>
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.55;0.97" dur="14s" repeatCount="indefinite"/></g>
+
+<rect class="row" x="40" y="304" width="600" height="52" rx="8" stroke-width="0.5"/>
+<text class="th" x="60" y="327">5 · Is the answer correct?</text>
+<text class="m" x="60" y="346">status · headers · body</text>
+<g opacity="0"><rect class="unk" x="516" y="316" width="104" height="28" rx="14" stroke-width="0.5" stroke-dasharray="4 4"/>
+<text class="unkt" x="568" y="335" text-anchor="middle">unknown</text>
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.62;0.97" dur="14s" repeatCount="indefinite"/></g>
+
+<rect class="panel" x="40" y="370" width="600" height="38" rx="8"/>
+<text class="tb" x="60" y="394" opacity="0">Running the ladder in order…
+<animate attributeName="opacity" calcMode="discrete" values="1;0" keyTimes="0;0.40" dur="14s" repeatCount="indefinite"/></text>
+<text class="tp" x="60" y="394" opacity="0">Link 3 is broken · DNS is fine, nothing is listening on 443
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.40;0.70" dur="14s" repeatCount="indefinite"/></text>
+<text class="tb" x="60" y="394" opacity="0">Steps 4 and 5 are not failing — they never ran. Fix the first break, then re-run.
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.70;0.97" dur="14s" repeatCount="indefinite"/></text>
+</svg>
