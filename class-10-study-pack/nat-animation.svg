@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="330" viewBox="0 0 680 330" role="img">
+<title>NAT rewriting a private address to one public address</title>
+<desc>A packet leaves 192.168.0.11, the router rewrites its sender to 203.0.113.9:40001 and records the mapping, the server replies, and the router rewrites the destination back.</desc>
+<style>
+.t{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;fill:#3C3489}
+.th{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;font-weight:500;fill:#2C2C2A}
+.ts{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:12px;fill:#5F5E5A}
+.tt{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;font-weight:500;fill:#085041}
+.tts{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:12px;fill:#1D9E75}
+.m{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;fill:#2C2C2A}
+.ml{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;fill:#5F5E5A}
+.hostbox{fill:#EEEDFE;stroke:#7F77DD}
+.rtbox{fill:#F1EFE8;stroke:#888780}
+.svbox{fill:#E1F5EE;stroke:#1D9E75}
+.wire{stroke:#B4B2A9}
+.panel{fill:#F1EFE8}
+@media (prefers-color-scheme:dark){
+.t{fill:#CECBF6}.th{fill:#EDEDE8}.ts{fill:#B4B2A9}.tt{fill:#9FE1CB}.tts{fill:#5DCAA5}
+.m{fill:#EDEDE8}.ml{fill:#B4B2A9}
+.hostbox{fill:#3C3489;stroke:#AFA9EC}.rtbox{fill:#2C2C2A;stroke:#B4B2A9}.svbox{fill:#085041;stroke:#5DCAA5}
+.wire{stroke:#5F5E5A}.panel{fill:#262624}}
+</style>
+
+<rect x="40" y="40" width="120" height="190" rx="12" fill="none" class="wire" stroke-width="0.5" stroke-dasharray="4 4"/>
+<text class="ts" x="100" y="58" text-anchor="middle">private LAN</text>
+
+<rect class="hostbox" x="48" y="68" width="104" height="40" rx="8" stroke-width="0.5"/>
+<text class="t" x="100" y="93" text-anchor="middle">192.168.0.11</text>
+<rect class="hostbox" x="48" y="118" width="104" height="40" rx="8" stroke-width="0.5"/>
+<text class="t" x="100" y="143" text-anchor="middle">192.168.0.12</text>
+<rect class="hostbox" x="48" y="168" width="104" height="40" rx="8" stroke-width="0.5"/>
+<text class="t" x="100" y="193" text-anchor="middle">192.168.0.13</text>
+
+<line x1="160" y1="88" x2="248" y2="138" class="wire" stroke-width="0.5"/>
+<line x1="160" y1="138" x2="248" y2="138" class="wire" stroke-width="0.5"/>
+<line x1="160" y1="188" x2="248" y2="138" class="wire" stroke-width="0.5"/>
+<line x1="362" y1="138" x2="526" y2="138" class="wire" stroke-width="0.5"/>
+
+<rect class="rtbox" x="250" y="110" width="110" height="56" rx="8" stroke-width="0.5">
+  <animate attributeName="stroke-width" calcMode="discrete" values="0.5;2;0.5;2;0.5" keyTimes="0;0.215;0.245;0.66;0.69" dur="9s" repeatCount="indefinite"/>
+</rect>
+<text class="th" x="305" y="134" text-anchor="middle">Router</text>
+<text class="ts" x="305" y="153" text-anchor="middle">203.0.113.9</text>
+
+<rect class="svbox" x="530" y="110" width="110" height="56" rx="8" stroke-width="0.5"/>
+<text class="tt" x="585" y="134" text-anchor="middle">Server</text>
+<text class="tts" x="585" y="153" text-anchor="middle">203.0.113.42</text>
+
+<g opacity="0">
+  <animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.055;0.84" dur="9s" repeatCount="indefinite"/>
+  <animateTransform attributeName="transform" type="translate" dur="9s" repeatCount="indefinite"
+    keyTimes="0;0.055;0.222;0.228;0.389;0.5;0.667;0.673;0.833;1"
+    values="160,76; 160,76; 246,126; 364,126; 486,126; 486,126; 364,126; 246,126; 160,76; 160,76"/>
+  <rect x="0" y="0" width="40" height="24" rx="6" fill="#AFA9EC" stroke="#7F77DD" stroke-width="0.5">
+    <animate attributeName="fill" calcMode="discrete" values="#AFA9EC;#5DCAA5;#AFA9EC" keyTimes="0;0.226;0.671" dur="9s" repeatCount="indefinite"/>
+    <animate attributeName="stroke" calcMode="discrete" values="#7F77DD;#1D9E75;#7F77DD" keyTimes="0;0.226;0.671" dur="9s" repeatCount="indefinite"/>
+  </rect>
+</g>
+
+<rect class="panel" x="40" y="246" width="600" height="30" rx="8"/>
+<text class="ml" x="52" y="265">header</text>
+<g>
+  <text class="m" x="110" y="265" opacity="0">from 192.168.0.11:51234  →  to 203.0.113.42:443
+    <animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.055;0.226" dur="9s" repeatCount="indefinite"/></text>
+  <text class="m" x="110" y="265" opacity="0">from 203.0.113.9:40001  →  to 203.0.113.42:443
+    <animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.226;0.5" dur="9s" repeatCount="indefinite"/></text>
+  <text class="m" x="110" y="265" opacity="0">from 203.0.113.42:443  →  to 203.0.113.9:40001
+    <animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.5;0.671" dur="9s" repeatCount="indefinite"/></text>
+  <text class="m" x="110" y="265" opacity="0">from 203.0.113.42:443  →  to 192.168.0.11:51234
+    <animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.671;0.84" dur="9s" repeatCount="indefinite"/></text>
+</g>
+
+<rect class="panel" x="40" y="284" width="600" height="30" rx="8"/>
+<text class="ml" x="52" y="303">table</text>
+<text class="ml" x="110" y="303" opacity="1">empty
+  <animate attributeName="opacity" calcMode="discrete" values="1;0;1" keyTimes="0;0.226;0.99" dur="9s" repeatCount="indefinite"/></text>
+<text class="m" x="110" y="303" opacity="0">192.168.0.11:51234  ⇄  203.0.113.9:40001
+  <animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.226;0.99" dur="9s" repeatCount="indefinite"/></text>
+</svg>

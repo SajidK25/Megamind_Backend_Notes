@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="360" viewBox="0 0 680 360" role="img">
+<title>How a recursive DNS lookup works</title>
+<desc>A device asks its resolver once; the resolver asks the root, then the .com servers, then the authoritative nameserver, and only the last one returns a real address.</desc>
+<style>
+.th{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;font-weight:500;fill:#2C2C2A}
+.ts{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:12px;fill:#5F5E5A}
+.tp{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;font-weight:500;fill:#993C1D}
+.m{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;fill:#2C2C2A}
+.dev rect{fill:#EEEDFE;stroke:#7F77DD}.dev text{fill:#3C3489}
+.res rect{fill:#F1EFE8;stroke:#888780}.res text{fill:#2C2C2A}
+.srv rect{fill:#E1F5EE;stroke:#1D9E75}.srv text{fill:#085041}
+.wire{stroke:#B4B2A9}.panel{fill:#F1EFE8}
+@media (prefers-color-scheme:dark){
+.th{fill:#EDEDE8}.ts{fill:#B4B2A9}.tp{fill:#F0997B}.m{fill:#EDEDE8}
+.dev rect{fill:#3C3489;stroke:#AFA9EC}.dev text{fill:#CECBF6}
+.res rect{fill:#2C2C2A;stroke:#B4B2A9}.res text{fill:#EDEDE8}
+.srv rect{fill:#085041;stroke:#5DCAA5}.srv text{fill:#9FE1CB}
+.wire{stroke:#5F5E5A}.panel{fill:#262624}}
+</style>
+
+<g class="dev"><rect x="40" y="146" width="110" height="52" rx="8" stroke-width="0.5"/>
+<text class="th" x="95" y="169" text-anchor="middle">Your device</text>
+<text class="ts" x="95" y="187" text-anchor="middle">the stub</text></g>
+
+<g class="res"><rect x="220" y="146" width="130" height="52" rx="8" stroke-width="0.5"/>
+<text class="th" x="285" y="169" text-anchor="middle">Resolver</text>
+<text class="ts" x="285" y="187" text-anchor="middle">does all the legwork</text></g>
+
+<line class="wire" x1="350" y1="172" x2="466" y2="72" stroke-width="0.5"/>
+<line class="wire" x1="350" y1="172" x2="466" y2="172" stroke-width="0.5"/>
+<line class="wire" x1="350" y1="172" x2="466" y2="272" stroke-width="0.5"/>
+
+<g class="srv"><rect x="470" y="46" width="170" height="52" rx="8" stroke-width="0.5"/>
+<text class="th" x="555" y="69" text-anchor="middle">Root</text>
+<text class="ts" x="555" y="87" text-anchor="middle">knows who runs .com</text></g>
+<g class="srv"><rect x="470" y="146" width="170" height="52" rx="8" stroke-width="0.5"/>
+<text class="th" x="555" y="169" text-anchor="middle">.com servers</text>
+<text class="ts" x="555" y="187" text-anchor="middle">know who runs chatapp.com</text></g>
+<g class="srv"><rect x="470" y="246" width="170" height="52" rx="8" stroke-width="0.5"/>
+<text class="th" x="555" y="269" text-anchor="middle">Authoritative</text>
+<text class="ts" x="555" y="287" text-anchor="middle">the only real answer</text></g>
+
+<g opacity="0">
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.03;0.95" dur="16s" repeatCount="indefinite"/>
+<animateTransform attributeName="transform" type="translate" dur="16s" repeatCount="indefinite"
+ keyTimes="0;0.03;0.10;0.16;0.26;0.32;0.42;0.48;0.58;0.64;0.74;0.80;0.90;0.95;1"
+ values="155,162; 155,162; 212,162; 358,162; 448,62; 358,162; 448,162; 358,162; 448,262; 358,162; 358,162; 212,162; 155,162; 155,162; 155,162"/>
+<rect x="0" y="0" width="34" height="20" rx="5" fill="#AFA9EC" stroke="#7F77DD" stroke-width="0.5">
+<animate attributeName="fill" calcMode="discrete" values="#AFA9EC;#5DCAA5;#AFA9EC;#5DCAA5;#AFA9EC;#5DCAA5" keyTimes="0;0.26;0.32;0.48;0.58;0.74" dur="16s" repeatCount="indefinite"/>
+<animate attributeName="stroke" calcMode="discrete" values="#7F77DD;#1D9E75;#7F77DD;#1D9E75;#7F77DD;#1D9E75" keyTimes="0;0.26;0.32;0.48;0.58;0.74" dur="16s" repeatCount="indefinite"/></rect>
+</g>
+
+<rect class="panel" x="40" y="316" width="600" height="34" rx="8"/>
+<text class="m" x="60" y="338" opacity="0">chatapp.com? — one question, one answer expected
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.03;0.16" dur="16s" repeatCount="indefinite"/></text>
+<text class="m" x="60" y="338" opacity="0">who runs .com? — go ask a.gtld-servers.net
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.16;0.32" dur="16s" repeatCount="indefinite"/></text>
+<text class="m" x="60" y="338" opacity="0">who runs chatapp.com? — go ask ns1.provider.com
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.32;0.48" dur="16s" repeatCount="indefinite"/></text>
+<text class="m" x="60" y="338" opacity="0">what is its address? — 203.0.113.42
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.48;0.74" dur="16s" repeatCount="indefinite"/></text>
+<text class="m" x="60" y="338" opacity="0">203.0.113.42 — cached, so the next lookup skips all of this
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.74;0.96" dur="16s" repeatCount="indefinite"/></text>
+<text class="tp" x="60" y="338" opacity="0">each question is one small UDP packet on port 53
+<animate attributeName="opacity" calcMode="discrete" values="0;1" keyTimes="0;0.96" dur="16s" repeatCount="indefinite"/></text>
+</svg>

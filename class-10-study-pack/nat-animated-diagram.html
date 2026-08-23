@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NAT: private vs public addresses</title>
+<style>
+:root{--bg:#FAFAF7;--card:#F1EFE8;--txt:#2C2C2A;--sec:#5F5E5A;--mut:#888780;--b:#B4B2A9;
+--pf:#EEEDFE;--ps:#7F77DD;--pt:#3C3489;--tf:#E1F5EE;--ts:#1D9E75;--tt:#085041;--gf:#F1EFE8;--gs:#888780}
+@media (prefers-color-scheme:dark){:root{--bg:#1A1A18;--card:#262624;--txt:#EDEDE8;--sec:#B4B2A9;--mut:#888780;--b:#5F5E5A;
+--pf:#3C3489;--ps:#AFA9EC;--pt:#CECBF6;--tf:#085041;--ts:#5DCAA5;--tt:#9FE1CB;--gf:#2C2C2A;--gs:#B4B2A9}}
+body{margin:0;padding:2rem 1rem;background:var(--bg);color:var(--txt);
+font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.7}
+main{max-width:720px;margin:0 auto}
+h1{font-size:22px;font-weight:500;margin:0 0 .25rem}
+p.lede{color:var(--sec);margin:0 0 1.5rem;font-size:15px}
+.t{font-size:14px;fill:var(--txt)}.th{font-size:14px;font-weight:500;fill:var(--txt)}.ts{font-size:12px;fill:var(--sec)}
+.c-purple rect{fill:var(--pf);stroke:var(--ps)}.c-purple .t,.c-purple .th{fill:var(--pt)}.c-purple .ts{fill:var(--ps)}
+.c-teal rect{fill:var(--tf);stroke:var(--ts)}.c-teal .t,.c-teal .th{fill:var(--tt)}.c-teal .ts{fill:var(--ts)}
+.c-gray rect{fill:var(--gf);stroke:var(--gs)}
+#pkt{transition:transform .9s ease-in-out}#pkt.jump{transition:none}#pkt.hide{opacity:0}
+#router-box rect{transition:stroke-width .2s}#router-box.hot rect{stroke-width:2}
+button{font:inherit;font-size:14px;background:transparent;color:var(--txt);border:.5px solid var(--b);
+border-radius:8px;padding:6px 14px;cursor:pointer}button:hover{background:var(--card)}
+.panel{background:var(--card);border-radius:8px;padding:1rem;margin:12px 0 0}
+.panel p.lbl{font-size:13px;color:var(--sec);margin:0 0 8px}
+.natrow{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;margin:0 0 4px}
+.legend{display:flex;gap:16px;margin:12px 0 0;font-size:13px;color:var(--sec)}
+.sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px}
+</style></head><body><main>
+<h1>Private vs public addresses, and NAT</h1>
+<p class="lede">Class 02 &sect;2.2 &mdash; click a device to send a packet and watch the router rewrite the sender.</p>
+<svg width="100%" viewBox="0 0 680 250" role="img"><title>NAT rewriting private addresses to one public address</title>
+<desc>Three devices on a private LAN connect through a router that swaps their private source address for its public one, and swaps it back for replies.</desc>
+<rect x="40" y="40" width="120" height="190" rx="12" fill="none" stroke="var(--b)" stroke-width="0.5" stroke-dasharray="4 4"/>
+<text class="ts" x="100" y="58" text-anchor="middle">private LAN</text>
+<g class="c-purple"><rect x="48" y="68" width="104" height="40" rx="8" stroke-width="0.5"/><text class="t" x="100" y="88" text-anchor="middle" dominant-baseline="central">192.168.0.11</text></g>
+<g class="c-purple"><rect x="48" y="118" width="104" height="40" rx="8" stroke-width="0.5"/><text class="t" x="100" y="138" text-anchor="middle" dominant-baseline="central">192.168.0.12</text></g>
+<g class="c-purple"><rect x="48" y="168" width="104" height="40" rx="8" stroke-width="0.5"/><text class="t" x="100" y="188" text-anchor="middle" dominant-baseline="central">192.168.0.13</text></g>
+<line x1="160" y1="88" x2="248" y2="138" stroke="var(--b)" stroke-width="0.5"/>
+<line x1="160" y1="138" x2="248" y2="138" stroke="var(--b)" stroke-width="0.5"/>
+<line x1="160" y1="188" x2="248" y2="138" stroke="var(--b)" stroke-width="0.5"/>
+<line x1="362" y1="138" x2="526" y2="138" stroke="var(--b)" stroke-width="0.5"/>
+<g id="router-box" class="c-gray"><rect x="250" y="110" width="110" height="56" rx="8" stroke-width="0.5"/><text class="th" x="305" y="130" text-anchor="middle" dominant-baseline="central">Router</text><text class="ts" x="305" y="149" text-anchor="middle" dominant-baseline="central">203.0.113.9</text></g>
+<g class="c-teal"><rect x="530" y="110" width="110" height="56" rx="8" stroke-width="0.5"/><text class="th" x="585" y="130" text-anchor="middle" dominant-baseline="central">Server</text><text class="ts" x="585" y="149" text-anchor="middle" dominant-baseline="central">203.0.113.42</text></g>
+<g id="pkt" class="hide c-purple" style="transform:translate(160px,126px)"><rect x="0" y="0" width="40" height="24" rx="6" stroke-width="0.5"/></g>
+</svg>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 0">
+<button onclick="send(0)">Send from .11</button><button onclick="send(1)">Send from .12</button>
+<button onclick="send(2)">Send from .13</button><button onclick="reset()">Clear table</button></div>
+<div class="legend"><span><span class="sw" style="background:#AFA9EC"></span>private address</span>
+<span><span class="sw" style="background:#5DCAA5"></span>public address</span></div>
+<div class="panel"><p class="lbl">Packet header right now</p><p class="natrow" id="hdr">idle</p></div>
+<div class="panel"><p class="lbl">Router translation table</p><div id="nat"><p class="natrow" style="color:var(--mut)">empty</p></div></div>
+<script>
+var hosts=["192.168.0.11","192.168.0.12","192.168.0.13"],cports=[51234,60777,49812],pub=40001,busy=false;
+var pkt=document.getElementById("pkt"),hdr=document.getElementById("hdr"),nat=document.getElementById("nat"),rb=document.getElementById("router-box");
+function at(x,y,j){if(j)pkt.classList.add("jump");pkt.style.transform="translate("+x+"px,"+y+"px)";if(j)requestAnimationFrame(function(){pkt.classList.remove("jump")})}
+function tint(c){pkt.setAttribute("class",c)}
+function send(i){
+if(busy)return;busy=true;
+var p=pub++,priv=hosts[i]+":"+cports[i],pubep="203.0.113.9:"+p,ys=[76,126,176];
+at(160,ys[i],true);tint("c-purple");
+hdr.textContent="from "+priv+"  \u2192  to 203.0.113.42:443";
+setTimeout(function(){at(246,126)},40);
+setTimeout(function(){rb.classList.add("hot")},900);
+setTimeout(function(){tint("c-teal");hdr.textContent="from "+pubep+"  \u2192  to 203.0.113.42:443";
+if(nat.firstChild&&nat.firstChild.style.color)nat.innerHTML="";
+var r=document.createElement("p");r.className="natrow";
+r.textContent=priv+"  \u21c4  "+pubep+"  \u2192  203.0.113.42:443";nat.appendChild(r);
+rb.classList.remove("hot");at(364,126,true)},1050);
+setTimeout(function(){at(486,126)},1140);
+setTimeout(function(){hdr.textContent="from 203.0.113.42:443  \u2192  to "+pubep;at(364,126)},2200);
+setTimeout(function(){rb.classList.add("hot")},3050);
+setTimeout(function(){tint("c-purple");hdr.textContent="from 203.0.113.42:443  \u2192  to "+priv;rb.classList.remove("hot");at(246,126,true)},3250);
+setTimeout(function(){at(160,ys[i])},3340);
+setTimeout(function(){tint("c-purple hide");hdr.textContent="delivered to "+priv;busy=false},4300);}
+function reset(){if(busy)return;nat.innerHTML='<p class="natrow" style="color:var(--mut)">empty</p>';hdr.textContent="idle";pub=40001}
+</script></main></body></html>

@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="380" viewBox="0 0 680 380" role="img">
+<title>Registry, registrar and nameserver — who does what</title>
+<desc>You buy a name from a registrar, the registrar lists it with the registry that runs the TLD, the one setting that matters at the registrar is which nameservers, and every actual record lives at the nameserver.</desc>
+<style>
+.th{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;font-weight:500;fill:#2C2C2A}
+.ts{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:12px;fill:#5F5E5A}
+.tp{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;font-weight:500;fill:#993C1D}
+.tb{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;fill:#2C2C2A}
+.m{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;fill:#2C2C2A}
+.you rect{fill:#EEEDFE;stroke:#7F77DD}.you text{fill:#3C3489}
+.mid rect{fill:#F1EFE8;stroke:#888780}.mid text{fill:#2C2C2A}
+.far rect{fill:#E1F5EE;stroke:#1D9E75}.far text{fill:#085041}
+.wire{stroke:#B4B2A9}
+.panel{fill:#F1EFE8}
+@media (prefers-color-scheme:dark){
+.th{fill:#EDEDE8}.ts{fill:#B4B2A9}.tp{fill:#F0997B}.tb{fill:#EDEDE8}.m{fill:#EDEDE8}
+.you rect{fill:#3C3489;stroke:#AFA9EC}.you text{fill:#CECBF6}
+.mid rect{fill:#2C2C2A;stroke:#B4B2A9}.mid text{fill:#EDEDE8}
+.far rect{fill:#085041;stroke:#5DCAA5}.far text{fill:#9FE1CB}
+.wire{stroke:#5F5E5A}.panel{fill:#262624}}
+</style>
+
+<g class="you"><rect x="40" y="140" width="110" height="52" rx="8" stroke-width="0.5"/>
+<text class="th" x="95" y="163" text-anchor="middle">You</text>
+<text class="ts" x="95" y="181" text-anchor="middle">the owner</text></g>
+
+<g class="mid"><rect x="240" y="50" width="150" height="52" rx="8" stroke-width="0.5">
+<animate attributeName="stroke-width" calcMode="discrete" values="0.5;2;0.5;2;0.5" keyTimes="0;0;0.25;0.5;0.75" dur="16s" repeatCount="indefinite"/></rect>
+<text class="th" x="315" y="73" text-anchor="middle">Registrar</text>
+<text class="ts" x="315" y="91" text-anchor="middle">sells the name</text></g>
+
+<g class="far"><rect x="470" y="50" width="170" height="52" rx="8" stroke-width="0.5">
+<animate attributeName="stroke-width" calcMode="discrete" values="0.5;2;0.5" keyTimes="0;0.25;0.5" dur="16s" repeatCount="indefinite"/></rect>
+<text class="th" x="555" y="73" text-anchor="middle">Registry</text>
+<text class="ts" x="555" y="91" text-anchor="middle">runs one TLD, lists every name</text></g>
+
+<g class="mid"><rect x="240" y="230" width="150" height="52" rx="8" stroke-width="0.5">
+<animate attributeName="stroke-width" calcMode="discrete" values="0.5;2;0.5;2" keyTimes="0;0.5;0.75;0.75" dur="16s" repeatCount="indefinite"/></rect>
+<text class="th" x="315" y="253" text-anchor="middle">Nameserver</text>
+<text class="ts" x="315" y="271" text-anchor="middle">answers the questions</text></g>
+
+<g class="far"><rect x="470" y="230" width="170" height="52" rx="8" stroke-width="0.5">
+<animate attributeName="stroke-width" calcMode="discrete" values="0.5;2" keyTimes="0;0.75" dur="16s" repeatCount="indefinite"/></rect>
+<text class="th" x="555" y="253" text-anchor="middle">Your records</text>
+<text class="ts" x="555" y="271" text-anchor="middle">A · AAAA · MX · TXT · CNAME</text></g>
+
+<line class="wire" x1="150" y1="152" x2="236" y2="88" stroke-width="0.5"/>
+<line class="wire" x1="150" y1="180" x2="236" y2="244" stroke-width="0.5"/>
+<line class="wire" x1="390" y1="76" x2="466" y2="76" stroke-width="0.5"/>
+<line class="wire" x1="390" y1="256" x2="466" y2="256" stroke-width="0.5"/>
+<line class="wire" x1="315" y1="102" x2="315" y2="228" stroke-width="0.5" stroke-dasharray="4 4"/>
+<text class="ts" x="325" y="169">points at</text>
+
+<rect class="panel" x="40" y="306" width="600" height="60" rx="8"/>
+<g><text class="tp" x="60" y="330">1 · you buy the name</text>
+<text class="tb" x="60" y="352">A registrar sells you chatapp.com and renews it each year.</text>
+<animate attributeName="opacity" calcMode="discrete" values="1;0" keyTimes="0;0.25" dur="16s" repeatCount="indefinite"/></g>
+<g opacity="0"><text class="tp" x="60" y="330">2 · the registrar tells the registry</text>
+<text class="tb" x="60" y="352">The registry that runs .com now lists the name and who to ask about it.</text>
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.25;0.5" dur="16s" repeatCount="indefinite"/></g>
+<g opacity="0"><text class="tp" x="60" y="330">3 · you set the nameservers</text>
+<text class="tb" x="60" y="352">This is the one setting at the registrar that actually matters.</text>
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.5;0.75" dur="16s" repeatCount="indefinite"/></g>
+<g opacity="0"><text class="tp" x="60" y="330">4 · every record lives at the nameserver</text>
+<text class="tb" x="60" y="352">Editing records at the registrar does nothing if the NS points elsewhere.</text>
+<animate attributeName="opacity" calcMode="discrete" values="0;1" keyTimes="0;0.75" dur="16s" repeatCount="indefinite"/></g>
+</svg>

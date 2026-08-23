@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="300" viewBox="0 0 680 300" role="img">
+<title>Every HTTP method, with safety and idempotency</title>
+<desc>GET, POST, PUT, PATCH and DELETE shown in turn, each with its request line, what it does, whether it is safe and idempotent, and whether it can be retried after a timeout.</desc>
+<style>
+.ts{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:12px;fill:#5F5E5A}
+.tb{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;fill:#2C2C2A}
+.tp{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:13px;font-weight:500;fill:#993C1D}
+.mv{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px;font-weight:600;fill:#5F5E5A}
+.m{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;fill:#2C2C2A}
+.pill{fill:none;stroke:#B4B2A9}
+.hl{fill:#EEEDFE;stroke:#7F77DD}
+.panel{fill:#F1EFE8}
+.yes{fill:#EAF3DE;stroke:#639922}.yest{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;fill:#3B6D11}
+.no{fill:#FCEBEB;stroke:#E24B4A}.not{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;fill:#A32D2D}
+@media (prefers-color-scheme:dark){
+.ts{fill:#B4B2A9}.tb{fill:#EDEDE8}.tp{fill:#F0997B}.mv{fill:#B4B2A9}.m{fill:#EDEDE8}
+.pill{stroke:#5F5E5A}.hl{fill:#3C3489;stroke:#AFA9EC}.panel{fill:#262624}
+.yes{fill:#27500A;stroke:#97C459}.yest{fill:#C0DD97}.no{fill:#791F1F;stroke:#F09595}.not{fill:#F7C1C1}}
+</style>
+
+<rect class="pill" x="41" y="40" width="110" height="38" rx="19" stroke-width="0.5"/>
+<rect class="pill" x="163" y="40" width="110" height="38" rx="19" stroke-width="0.5"/>
+<rect class="pill" x="285" y="40" width="110" height="38" rx="19" stroke-width="0.5"/>
+<rect class="pill" x="407" y="40" width="110" height="38" rx="19" stroke-width="0.5"/>
+<rect class="pill" x="529" y="40" width="110" height="38" rx="19" stroke-width="0.5"/>
+<rect class="hl" x="41" y="40" width="110" height="38" rx="19" stroke-width="1.5">
+<animate attributeName="x" calcMode="discrete" values="41;163;285;407;529" keyTimes="0;0.2;0.4;0.6;0.8" dur="20s" repeatCount="indefinite"/></rect>
+<text class="mv" x="96" y="65" text-anchor="middle">GET</text>
+<text class="mv" x="218" y="65" text-anchor="middle">POST</text>
+<text class="mv" x="340" y="65" text-anchor="middle">PUT</text>
+<text class="mv" x="462" y="65" text-anchor="middle">PATCH</text>
+<text class="mv" x="584" y="65" text-anchor="middle">DELETE</text>
+
+<rect class="panel" x="40" y="100" width="600" height="170" rx="8"/>
+
+<g>
+<text class="m" x="64" y="136">GET /v1/checks/41</text>
+<text class="tb" x="64" y="164">Read it, and change nothing at all.</text>
+<rect class="yes" x="64" y="184" width="70" height="24" rx="12" stroke-width="0.5"/><text class="yest" x="99" y="200" text-anchor="middle">safe</text>
+<rect class="yes" x="144" y="184" width="110" height="24" rx="12" stroke-width="0.5"/><text class="yest" x="199" y="200" text-anchor="middle">idempotent</text>
+<text class="tp" x="64" y="238">Timed out? Just send it again.</text>
+<animate attributeName="opacity" calcMode="discrete" values="1;0" keyTimes="0;0.2" dur="20s" repeatCount="indefinite"/></g>
+
+<g opacity="0">
+<text class="m" x="64" y="136">POST /v1/checks</text>
+<text class="tb" x="64" y="164">Create something new, or ask for work to be done.</text>
+<rect class="no" x="64" y="184" width="70" height="24" rx="12" stroke-width="0.5"/><text class="not" x="99" y="200" text-anchor="middle">not safe</text>
+<rect class="no" x="144" y="184" width="140" height="24" rx="12" stroke-width="0.5"/><text class="not" x="214" y="200" text-anchor="middle">not idempotent</text>
+<text class="tp" x="64" y="238">Timed out? Retrying may charge the card twice — send an idempotency key.</text>
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.2;0.4" dur="20s" repeatCount="indefinite"/></g>
+
+<g opacity="0">
+<text class="m" x="64" y="136">PUT /v1/checks/41</text>
+<text class="tb" x="64" y="164">Replace the whole resource. Fields you omit are gone.</text>
+<rect class="no" x="64" y="184" width="70" height="24" rx="12" stroke-width="0.5"/><text class="not" x="99" y="200" text-anchor="middle">not safe</text>
+<rect class="yes" x="144" y="184" width="110" height="24" rx="12" stroke-width="0.5"/><text class="yest" x="199" y="200" text-anchor="middle">idempotent</text>
+<text class="tp" x="64" y="238">Timed out? Safe to send again — the end state is the same.</text>
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.4;0.6" dur="20s" repeatCount="indefinite"/></g>
+
+<g opacity="0">
+<text class="m" x="64" y="136">PATCH /v1/checks/41</text>
+<text class="tb" x="64" y="164">Change part of it and leave the rest alone.</text>
+<rect class="no" x="64" y="184" width="70" height="24" rx="12" stroke-width="0.5"/><text class="not" x="99" y="200" text-anchor="middle">not safe</text>
+<rect class="no" x="144" y="184" width="180" height="24" rx="12" stroke-width="0.5"/><text class="not" x="234" y="200" text-anchor="middle">only if you design it so</text>
+<text class="tp" x="64" y="238">{"every": 30} is idempotent. {"every": "+30"} is not.</text>
+<animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.6;0.8" dur="20s" repeatCount="indefinite"/></g>
+
+<g opacity="0">
+<text class="m" x="64" y="136">DELETE /v1/checks/41</text>
+<text class="tb" x="64" y="164">Remove it. Usually answered with 204 and no body.</text>
+<rect class="no" x="64" y="184" width="70" height="24" rx="12" stroke-width="0.5"/><text class="not" x="99" y="200" text-anchor="middle">not safe</text>
+<rect class="yes" x="144" y="184" width="110" height="24" rx="12" stroke-width="0.5"/><text class="yest" x="199" y="200" text-anchor="middle">idempotent</text>
+<text class="tp" x="64" y="238">Send it twice: still deleted. The status may differ — 204 then 404.</text>
+<animate attributeName="opacity" calcMode="discrete" values="0;1" keyTimes="0;0.8" dur="20s" repeatCount="indefinite"/></g>
+
+<text class="ts" x="340" y="288" text-anchor="middle">safe = changes nothing · idempotent = doing it twice equals doing it once</text>
+</svg>

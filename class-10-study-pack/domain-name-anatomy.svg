@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="250" viewBox="0 0 680 250" role="img">
+<title>A domain name is read from the right</title>
+<desc>The name api.chatapp.com. is highlighted one label at a time from right to left — root, then top level domain, then second level, then subdomain.</desc>
+<style>
+.ts{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:12px;fill:#5F5E5A}
+.tp{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;font-weight:500;fill:#993C1D}
+.tb{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;fill:#2C2C2A}
+.d{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:28px;fill:#2C2C2A}
+.hl{fill:#FAC775;opacity:0.45}
+.panel{fill:#F1EFE8}
+.ar{stroke:#D85A30}
+@media (prefers-color-scheme:dark){
+.ts{fill:#B4B2A9}.tp{fill:#F0997B}.tb{fill:#EDEDE8}.d{fill:#EDEDE8}
+.hl{fill:#854F0B;opacity:0.6}.panel{fill:#262624}.ar{stroke:#F0997B}}
+</style>
+
+<text class="ts" x="474" y="52" text-anchor="end">every lookup starts here and walks left</text>
+<line class="ar" x1="470" y1="62" x2="212" y2="62" stroke-width="1.5"/>
+<polygon points="220,57 212,62 220,67" fill="#D85A30"/>
+
+<rect class="hl" x="457" y="82" width="17" height="38" rx="3">
+<animate attributeName="x" calcMode="discrete" values="457;406.6;272.2;205" keyTimes="0;0.25;0.5;0.75" dur="12s" repeatCount="indefinite"/>
+<animate attributeName="width" calcMode="discrete" values="17;50.4;117.6;50.4" keyTimes="0;0.25;0.5;0.75" dur="12s" repeatCount="indefinite"/></rect>
+<text class="d" x="205" y="112">api.chatapp.com.</text>
+
+<rect class="panel" x="40" y="150" width="600" height="66" rx="8"/>
+<g>
+  <text class="tp" x="60" y="178">the root</text>
+  <text class="tb" x="60" y="200">The invisible dot where every lookup begins. It knows the TLDs.</text>
+  <animate attributeName="opacity" calcMode="discrete" values="1;0" keyTimes="0;0.25" dur="12s" repeatCount="indefinite"/>
+</g>
+<g opacity="0">
+  <text class="tp" x="60" y="178">top level domain</text>
+  <text class="tb" x="60" y="200">Run by a registry such as com, org, io or bd. It knows its own domains.</text>
+  <animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.25;0.5" dur="12s" repeatCount="indefinite"/>
+</g>
+<g opacity="0">
+  <text class="tp" x="60" y="178">second level</text>
+  <text class="tb" x="60" y="200">The part we register and pay for. Its nameservers hold every record.</text>
+  <animate attributeName="opacity" calcMode="discrete" values="0;1;0" keyTimes="0;0.5;0.75" dur="12s" repeatCount="indefinite"/>
+</g>
+<g opacity="0">
+  <text class="tp" x="60" y="178">subdomain</text>
+  <text class="tb" x="60" y="200">Ours to invent, as many as we like, for free.</text>
+  <animate attributeName="opacity" calcMode="discrete" values="0;1" keyTimes="0;0.75" dur="12s" repeatCount="indefinite"/>
+</g>
+</svg>
