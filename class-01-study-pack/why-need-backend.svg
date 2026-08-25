@@ -1,0 +1,26 @@
+<svg viewBox="0 0 800 280" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <style>
+    .box { fill: none; stroke: #33322e; stroke-width: 2; }
+    .title { font-size: 15px; font-weight: bold; fill: #33322e; }
+    .sub { font-size: 12px; fill: #6b6a66; }
+  </style>
+  <rect class="box" x="30" y="20" width="360" height="105" rx="8"/>
+  <text class="title" x="50" y="50">One shared truth</text>
+  <text class="sub" x="50" y="75">Everybody sees the same answer</text>
+  <text class="sub" x="50" y="93">because data lives in one place.</text>
+
+  <rect class="box" x="410" y="20" width="360" height="105" rx="8"/>
+  <text class="title" x="430" y="50">A place for secrets</text>
+  <text class="sub" x="430" y="75">Anything a user must never hold</text>
+  <text class="sub" x="430" y="93">sits on a machine they can't see.</text>
+
+  <rect class="box" x="30" y="145" width="360" height="105" rx="8"/>
+  <text class="title" x="50" y="175">Work a device can't do</text>
+  <text class="sub" x="50" y="200">Heavy work runs on a rented</text>
+  <text class="sub" x="50" y="218">machine, not a draining battery.</text>
+
+  <rect class="box" x="410" y="145" width="360" height="105" rx="8"/>
+  <text class="title" x="430" y="175">Change without shipping</text>
+  <text class="sub" x="430" y="200">A server-side rule reaches</text>
+  <text class="sub" x="430" y="218">everyone without an app update.</text>
+</svg>

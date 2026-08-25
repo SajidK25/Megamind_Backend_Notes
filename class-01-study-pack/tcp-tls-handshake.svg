@@ -1,0 +1,23 @@
+<svg viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <style>
+    .box { fill: none; stroke: #33322e; stroke-width: 2; }
+    .sub { font-size: 13px; fill: #6b6a66; }
+    .arrowA { stroke: #d97a3b; stroke-width: 2; fill: none; marker-end: url(#arrowA); }
+    .arrowB { stroke: #33322e; stroke-width: 2; fill: none; marker-end: url(#arrowB); }
+  </style>
+  <defs>
+    <marker id="arrowA" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#d97a3b"/></marker>
+    <marker id="arrowB" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#33322e"/></marker>
+  </defs>
+  <rect class="box" x="40" y="90" width="140" height="70" rx="8"/>
+  <rect class="box" x="520" y="90" width="140" height="70" rx="8"/>
+
+  <path class="arrowA" d="M180,120 L518,120"/>
+  <text class="sub" x="260" y="112">"are you there?"</text>
+
+  <path class="arrowB" d="M520,150 L182,150"/>
+  <text class="sub" x="260" y="172">"I am. Let's go."</text>
+
+  <text class="sub" x="40" y="210">HTTP: the line is open and readable.</text>
+  <text class="sub" x="40" y="230">HTTPS: one more round agrees how to scramble everything (the padlock).</text>
+</svg>

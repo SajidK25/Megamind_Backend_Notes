@@ -1,0 +1,29 @@
+<svg viewBox="0 0 800 260" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <style>
+    .box { fill: none; stroke: #33322e; stroke-width: 2; }
+    .boxOn { fill: none; stroke: #d97a3b; stroke-width: 2; }
+    .title { font-size: 15px; font-weight: bold; fill: #33322e; }
+    .sub { font-size: 12px; fill: #6b6a66; }
+    .flag { font-size: 12px; font-weight: bold; }
+  </style>
+  <rect class="box" x="20" y="30" width="240" height="180" rx="8"/>
+  <text class="title" x="35" y="65">Works alone</text>
+  <text class="sub" x="35" y="95">Never talks to anything.</text>
+  <text class="sub" x="35" y="113">Turn off the internet,</text>
+  <text class="sub" x="35" y="131">nothing changes.</text>
+  <text class="flag" x="35" y="180" fill="#6b6a66">NO BACKEND</text>
+
+  <rect class="boxOn" x="280" y="30" width="240" height="180" rx="8"/>
+  <text class="title" x="295" y="65">Needs the network</text>
+  <text class="sub" x="295" y="95">Useless without a connection.</text>
+  <text class="sub" x="295" y="113">The interesting part</text>
+  <text class="sub" x="295" y="131">lives elsewhere.</text>
+  <text class="flag" x="295" y="180" fill="#d97a3b">BACKEND REQUIRED</text>
+
+  <rect class="boxOn" x="540" y="30" width="240" height="180" rx="8"/>
+  <text class="title" x="555" y="65">Works alone, syncs later</text>
+  <text class="sub" x="555" y="95">Fine on a plane.</text>
+  <text class="sub" x="555" y="113">Catches up the moment</text>
+  <text class="sub" x="555" y="131">it gets a signal.</text>
+  <text class="flag" x="555" y="180" fill="#d97a3b">BACKEND REQUIRED</text>
+</svg>

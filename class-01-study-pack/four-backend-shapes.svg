@@ -1,0 +1,31 @@
+<svg viewBox="0 0 900 260" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <style>
+    .box { fill: none; stroke: #33322e; stroke-width: 1.5; }
+    .title { font-size: 13px; font-weight: bold; fill: #33322e; }
+    .sub { font-size: 10.5px; fill: #6b6a66; }
+    .letter { font-size: 14px; fill: #d97a3b; font-weight: bold; }
+  </style>
+  <rect class="box" x="20" y="20" width="200" height="200" rx="8"/>
+  <text class="letter" x="35" y="45">A</text>
+  <text class="title" x="60" y="45">Just files</text>
+  <text class="sub" x="35" y="75">Browser → Nginx → files.</text>
+  <text class="sub" x="35" y="93">No application server.</text>
+
+  <rect class="box" x="240" y="20" width="200" height="200" rx="8"/>
+  <text class="letter" x="255" y="45">B</text>
+  <text class="title" x="280" y="45">Proxy to HTTP app</text>
+  <text class="sub" x="255" y="75">Browser → Nginx → Node.</text>
+  <text class="sub" x="255" y="93">Nginx just forwards.</text>
+
+  <rect class="box" x="460" y="20" width="200" height="200" rx="8"/>
+  <text class="letter" x="475" y="45">C</text>
+  <text class="title" x="500" y="45">Bridge protocol</text>
+  <text class="sub" x="475" y="75">Browser → Nginx → PHP-FPM.</text>
+  <text class="sub" x="475" y="93">FastCGI, not HTTP, behind.</text>
+
+  <rect class="box" x="680" y="20" width="200" height="200" rx="8"/>
+  <text class="letter" x="695" y="45">D</text>
+  <text class="title" x="720" y="45">No front door</text>
+  <text class="sub" x="695" y="75">Browser → Node.js :3000.</text>
+  <text class="sub" x="695" y="93">No Nginx in front at all.</text>
+</svg>

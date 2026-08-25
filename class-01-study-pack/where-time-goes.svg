@@ -1,0 +1,25 @@
+<svg viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <style>
+    .bar { stroke: #d97a3b; stroke-width: 8; }
+    .label { font-size: 12px; fill: #33322e; }
+    .val { font-size: 12px; fill: #6b6a66; }
+  </style>
+  <text class="label" x="20" y="35">Name lookup</text>
+  <line class="bar" x1="180" y1="30" x2="220" y2="30"/>
+  <text class="val" x="230" y="35">≈ 20ms</text>
+
+  <text class="label" x="20" y="75">Opening the line</text>
+  <line class="bar" x1="180" y1="70" x2="260" y2="70"/>
+  <text class="val" x="270" y="75">≈ 40ms</text>
+
+  <text class="label" x="20" y="115">Server thinking</text>
+  <line class="bar" x1="180" y1="110" x2="420" y2="110" stroke-width="10"/>
+  <text class="val" x="430" y="115">≈ 120ms — the part we write</text>
+
+  <text class="label" x="20" y="155">Sending it back</text>
+  <line class="bar" x1="180" y1="150" x2="240" y2="150"/>
+  <text class="val" x="250" y="155">≈ 30ms</text>
+
+  <text class="val" x="20" y="210">Only the third bar is ours to shrink — most of that</text>
+  <text class="val" x="20" y="228">is spent waiting on the database.</text>
+</svg>

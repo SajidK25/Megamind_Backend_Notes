@@ -4,7 +4,7 @@ Study-note series for the 10-week bootcamp. Click a week to open its study pack.
 
 | Week | Topic | Study Pack |
 |------|-------|------------|
-| 1 | How backend works | Coming soon |
+| 1 | How backend works | [class-01-study-pack](class-01-study-pack/class-01-how-backend-systems-work-study-guide.md) |
 | 2 | Networking: HTTP, HTTPS, SSH, DNS, SMTP | [class-02-study-pack](class-02-study-pack/class-02-networking-study-guide.md) |
 | 3 | API, Monolithing app, REST, GraphQL | Coming soon |
 | 4 | Authentication, Authorization and security basics | Coming soon |

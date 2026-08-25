@@ -1,0 +1,34 @@
+<svg viewBox="0 0 800 320" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <style>
+    .box { fill: none; stroke: #33322e; stroke-width: 2; }
+    .title { font-size: 16px; font-weight: bold; fill: #33322e; }
+    .sub { font-size: 13px; fill: #6b6a66; }
+    .arrow { stroke: #d97a3b; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+    .num { font-size: 14px; fill: #d97a3b; font-weight: bold; }
+  </style>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#d97a3b"/>
+    </marker>
+  </defs>
+  <rect class="box" x="40" y="30" width="260" height="80" rx="8"/>
+  <text class="num" x="55" y="55">1</text>
+  <text class="title" x="80" y="60">Do things on the device</text>
+  <text class="sub" x="80" y="85">Run code locally.</text>
+
+  <rect class="box" x="40" y="130" width="260" height="80" rx="8"/>
+  <text class="num" x="55" y="155">2</text>
+  <text class="title" x="80" y="160">Save things on the device</text>
+  <text class="sub" x="80" y="185">Local storage.</text>
+
+  <rect class="box" x="40" y="230" width="260" height="80" rx="8"/>
+  <text class="num" x="55" y="255">3</text>
+  <text class="title" x="80" y="260">Do/save things elsewhere</text>
+  <text class="sub" x="80" y="285">Needs a second machine.</text>
+
+  <path class="arrow" d="M300,270 C400,270 400,270 480,150"/>
+
+  <ellipse cx="620" cy="150" rx="120" ry="60" class="box"/>
+  <text class="title" x="565" y="145">Something else</text>
+  <text class="sub" x="555" y="170">(the backend)</text>
+</svg>

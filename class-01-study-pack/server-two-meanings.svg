@@ -1,0 +1,18 @@
+<svg viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <style>
+    .box { fill: none; stroke: #33322e; stroke-width: 2; }
+    .title { font-size: 14px; font-weight: bold; fill: #33322e; }
+    .sub { font-size: 12px; fill: #6b6a66; }
+  </style>
+  <rect class="box" x="30" y="30" width="300" height="150" rx="8"/>
+  <text class="title" x="50" y="60">The machine</text>
+  <text class="sub" x="50" y="90">A box in a rack somewhere.</text>
+  <text class="sub" x="50" y="108">No screen, no keyboard.</text>
+  <text class="sub" x="50" y="140">We rent it by the month.</text>
+
+  <rect class="box" x="370" y="30" width="300" height="150" rx="8"/>
+  <text class="title" x="390" y="60">The program</text>
+  <text class="sub" x="390" y="90">Software whose job is to wait</text>
+  <text class="sub" x="390" y="108">for connections and answer.</text>
+  <text class="sub" x="390" y="140">We install it, or a host does.</text>
+</svg>

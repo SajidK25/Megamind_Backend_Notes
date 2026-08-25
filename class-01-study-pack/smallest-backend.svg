@@ -1,0 +1,30 @@
+<svg viewBox="0 0 800 220" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <style>
+    .box { fill: none; stroke: #33322e; stroke-width: 2; }
+    .title { font-size: 17px; font-weight: bold; fill: #33322e; }
+    .sub { font-size: 12px; fill: #6b6a66; }
+    .num { font-size: 14px; fill: #d97a3b; font-weight: bold; }
+    .arrow { stroke: #d97a3b; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+  </style>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#d97a3b"/></marker>
+  </defs>
+
+  <rect class="box" x="30" y="60" width="200" height="100" rx="8"/>
+  <text class="num" x="45" y="85">1</text>
+  <text class="title" x="75" y="90">Web server</text>
+  <text class="sub" x="75" y="115">Answers the door</text>
+
+  <rect class="box" x="300" y="60" width="200" height="100" rx="8"/>
+  <text class="num" x="315" y="85">2</text>
+  <text class="title" x="345" y="90">Application</text>
+  <text class="sub" x="345" y="115">Decides</text>
+
+  <rect class="box" x="570" y="60" width="200" height="100" rx="8"/>
+  <text class="num" x="585" y="85">3</text>
+  <text class="title" x="615" y="90">Database</text>
+  <text class="sub" x="615" y="115">Remembers</text>
+
+  <path class="arrow" d="M230,110 L298,110"/>
+  <path class="arrow" d="M500,110 L568,110"/>
+</svg>

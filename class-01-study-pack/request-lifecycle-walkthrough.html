@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The life of one request</title>
+<style>
+  :root {
+    --bg: #faf9f5; --ink: #33322e; --sub: #6b6a66; --accent: #d97a3b; --line: #d8d5cc;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    margin: 0;
+    padding: 40px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  h1 { font-size: 22px; margin-bottom: 4px; }
+  p.intro { color: var(--sub); margin-top: 0; max-width: 560px; text-align: center; }
+  .stage-track {
+    display: flex;
+    gap: 8px;
+    margin: 24px 0;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 900px;
+  }
+  .dot {
+    width: 32px; height: 32px; border-radius: 50%;
+    border: 2px solid var(--line);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: bold; color: var(--sub);
+    cursor: pointer; background: white;
+    transition: all 0.15s ease;
+  }
+  .dot.active { border-color: var(--accent); color: var(--accent); background: #fdf1e7; }
+  .dot.done { border-color: var(--ink); color: var(--ink); }
+  .stage {
+    display: none;
+    border: 2px solid var(--ink);
+    border-radius: 10px;
+    padding: 28px 32px;
+    max-width: 640px;
+    width: 100%;
+    background: white;
+  }
+  .stage.active { display: block; }
+  .stage h2 { margin-top: 0; font-size: 19px; }
+  .stage .step-no { color: var(--accent); font-weight: bold; font-size: 13px; letter-spacing: 0.05em; }
+  .stage p { color: var(--sub); line-height: 1.5; }
+  .stage code {
+    display: block; background: #f2f0e8; border-radius: 6px; padding: 10px 14px;
+    font-family: 'Courier New', monospace; font-size: 13px; margin-top: 10px; color: var(--ink);
+    white-space: pre-wrap;
+  }
+  .controls { display: flex; gap: 12px; margin-top: 24px; }
+  button {
+    font-family: inherit; font-size: 14px; padding: 10px 20px;
+    border-radius: 6px; border: 2px solid var(--ink); background: white; cursor: pointer;
+    color: var(--ink);
+  }
+  button:disabled { opacity: 0.35; cursor: default; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: white; }
+</style>
+</head>
+<body>
+  <h1>The life of one request</h1>
+  <p class="intro">Somebody taps a button, and eight things happen before the screen changes. Step through them below.</p>
+
+  <div class="stage-track" id="track"></div>
+
+  <div id="stages"></div>
+
+  <div class="controls">
+    <button id="prevBtn">← Back</button>
+    <button id="nextBtn" class="primary">Next →</button>
+  </div>
+
+<script>
+  const stages = [
+    {
+      title: "A name becomes a number",
+      body: "The browser knows only chatapp.com. A DNS server translates that name into a machine's real address.",
+      code: "chatapp.com  →  DNS server  →  203.0.113.42"
+    },
+    {
+      title: "A line is opened",
+      body: "Both sides say hello and agree they're ready. Over HTTPS, one extra round agrees how to scramble everything.",
+      code: '"are you there?"  →\n←  "I am. Let\'s go."'
+    },
+    {
+      title: "The request is sent down the line",
+      body: "The request travels as plain text: a verb, an address, proof of who's asking, and a payload.",
+      code: "POST /v1/messages HTTP/1.1\nHost: api.chatapp.com\nAuthorization: Bearer eyJ...\n\n{ \"to\": \"ayesha\", \"text\": \"on my way\" }"
+    },
+    {
+      title: "The web server hands it to the app",
+      body: "The web server holds no business rules. It can serve a static file itself, but anything that depends on who's asking gets forwarded inward.",
+      code: "Web server  →  forwards  →  Application"
+    },
+    {
+      title: "Our code decides what happens",
+      body: "Who is asking? (authentication) → Are they allowed? (authorization) → Does the request make sense? (validation) → do the work → prepare an answer.",
+      code: "authenticate → authorize → validate → work → respond"
+    },
+    {
+      title: "The database is asked and answers",
+      body: "Our code can be redeployed from source at any time. The data only lives in the database — which is why backups matter.",
+      code: "SELECT text, sent_at FROM messages\nWHERE conversation_id = 4021;"
+    },
+    {
+      title: "A response comes back",
+      body: "The backend sends back a status code together with the data, so the client knows what happened.",
+      code: "2xx — it worked\n4xx — the client asked wrong\n5xx — the server failed"
+    },
+    {
+      title: "The screen changes",
+      body: "The client reads the status code and data, and updates what the user sees. Total round trip: roughly half a second, and only the 'server thinking' portion is ours to shrink.",
+      code: "DNS 20ms · connect 40ms · server 120ms · response 30ms"
+    }
+  ];
+
+  let current = 0;
+  const track = document.getElementById('track');
+  const stagesEl = document.getElementById('stages');
+
+  stages.forEach((s, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'dot';
+    dot.textContent = i + 1;
+    dot.addEventListener('click', () => { current = i; render(); });
+    track.appendChild(dot);
+
+    const stageEl = document.createElement('div');
+    stageEl.className = 'stage';
+    stageEl.innerHTML = `<div class="step-no">STEP ${i + 1} OF ${stages.length}</div>
+      <h2>${s.title}</h2>
+      <p>${s.body}</p>
+      <code>${s.code}</code>`;
+    stagesEl.appendChild(stageEl);
+  });
+
+  const dots = track.querySelectorAll('.dot');
+  const stageEls = stagesEl.querySelectorAll('.stage');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+
+  function render() {
+    dots.forEach((d, i) => {
+      d.classList.toggle('active', i === current);
+      d.classList.toggle('done', i < current);
+    });
+    stageEls.forEach((el, i) => el.classList.toggle('active', i === current));
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === stages.length - 1;
+  }
+
+  prevBtn.addEventListener('click', () => { if (current > 0) { current--; render(); } });
+  nextBtn.addEventListener('click', () => { if (current < stages.length - 1) { current++; render(); } });
+
+  render();
+</script>
+</body>
+</html>

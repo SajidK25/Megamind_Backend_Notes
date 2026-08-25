@@ -1,0 +1,22 @@
+<svg viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <style>
+    .box { fill: none; stroke: #33322e; stroke-width: 1.5; }
+    .title { font-size: 14px; font-weight: bold; fill: #33322e; }
+    .sub { font-size: 12px; fill: #6b6a66; }
+  </style>
+  <rect class="box" x="20" y="20" width="320" height="90" rx="6"/>
+  <text class="title" x="35" y="48">Accepts connections</text>
+  <text class="sub" x="35" y="72">Listens on a port, thousands at once.</text>
+
+  <rect class="box" x="360" y="20" width="320" height="90" rx="6"/>
+  <text class="title" x="375" y="48">Serves files</text>
+  <text class="sub" x="375" y="72">Images, CSS, fonts, straight off disk.</text>
+
+  <rect class="box" x="20" y="130" width="320" height="90" rx="6"/>
+  <text class="title" x="35" y="158">Handles HTTPS</text>
+  <text class="sub" x="35" y="182">Scrambles/unscrambles traffic.</text>
+
+  <rect class="box" x="360" y="130" width="320" height="90" rx="6"/>
+  <text class="title" x="375" y="158">Forwards the rest</text>
+  <text class="sub" x="375" y="182">Anything needing our code, forwarded.</text>
+</svg>

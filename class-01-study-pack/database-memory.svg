@@ -1,0 +1,17 @@
+<svg viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <style>
+    .box { fill: none; stroke: #33322e; stroke-width: 2; }
+    .code { font-family: monospace; font-size: 12px; fill: #33322e; }
+    .sub { font-size: 12px; fill: #6b6a66; }
+  </style>
+  <rect class="box" x="30" y="30" width="380" height="110" rx="4"/>
+  <text class="code" x="45" y="55">SELECT text, sent_at</text>
+  <text class="code" x="45" y="75">FROM messages</text>
+  <text class="code" x="45" y="95">WHERE conversation_id = 4021;</text>
+
+  <ellipse cx="580" cy="90" rx="90" ry="60" class="box"/>
+  <text class="sub" x="540" y="95">database</text>
+
+  <text class="sub" x="30" y="180">Code can be redeployed from source.</text>
+  <text class="sub" x="30" y="200">The data only lives here — which is why backups matter.</text>
+</svg>

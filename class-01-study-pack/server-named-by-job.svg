@@ -1,0 +1,37 @@
+<svg viewBox="0 0 900 220" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <style>
+    .box { fill: none; stroke: #33322e; stroke-width: 1.5; }
+    .title { font-size: 13px; font-weight: bold; fill: #33322e; }
+    .sub { font-size: 10.5px; fill: #6b6a66; }
+  </style>
+  <rect class="box" x="20" y="20" width="130" height="90" rx="6"/>
+  <text class="title" x="30" y="45">Web server</text>
+  <text class="sub" x="30" y="68">Requests in,</text>
+  <text class="sub" x="30" y="82">answers out.</text>
+
+  <rect class="box" x="165" y="20" width="130" height="90" rx="6"/>
+  <text class="title" x="175" y="45">App server</text>
+  <text class="sub" x="175" y="68">Runs our code.</text>
+
+  <rect class="box" x="310" y="20" width="130" height="90" rx="6"/>
+  <text class="title" x="320" y="45">DB server</text>
+  <text class="sub" x="320" y="68">Keeps the data.</text>
+
+  <rect class="box" x="455" y="20" width="130" height="90" rx="6"/>
+  <text class="title" x="465" y="45">File server</text>
+  <text class="sub" x="465" y="68">Photos, video,</text>
+  <text class="sub" x="465" y="82">documents.</text>
+
+  <rect class="box" x="600" y="20" width="130" height="90" rx="6"/>
+  <text class="title" x="610" y="45">Mail server</text>
+  <text class="sub" x="610" y="68">Sends/receives</text>
+  <text class="sub" x="610" y="82">email.</text>
+
+  <rect class="box" x="745" y="20" width="130" height="90" rx="6"/>
+  <text class="title" x="755" y="45">Cache server</text>
+  <text class="sub" x="755" y="68">Fast copy of</text>
+  <text class="sub" x="755" y="82">answers.</text>
+
+  <text class="sub" x="20" y="150">One machine can run several of these at once —</text>
+  <text class="sub" x="20" y="168">the name describes the job, not the box.</text>
+</svg>

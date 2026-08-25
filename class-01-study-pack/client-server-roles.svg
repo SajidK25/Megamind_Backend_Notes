@@ -1,0 +1,36 @@
+<svg viewBox="0 0 800 320" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <style>
+    .box { fill: none; stroke: #33322e; stroke-width: 2; }
+    .title { font-size: 17px; font-weight: bold; fill: #33322e; }
+    .sub { font-size: 12px; fill: #6b6a66; }
+    .label { font-size: 12px; fill: #d97a3b; }
+    .arrow { stroke: #d97a3b; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+    .arrow2 { stroke: #33322e; stroke-width: 2; fill: none; marker-end: url(#arrow2); }
+  </style>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#d97a3b"/></marker>
+    <marker id="arrow2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#33322e"/></marker>
+  </defs>
+
+  <rect class="box" x="40" y="120" width="160" height="80" rx="8"/>
+  <text class="title" x="65" y="155">A phone</text>
+  <text class="label" x="65" y="175">CLIENT</text>
+
+  <rect class="box" x="320" y="120" width="180" height="80" rx="8"/>
+  <text class="title" x="345" y="150">Our server</text>
+  <text class="sub" x="335" y="170">server here ·</text>
+  <text class="sub" x="335" y="185">client there</text>
+
+  <rect class="box" x="620" y="120" width="160" height="80" rx="8"/>
+  <text class="title" x="655" y="155">Stripe</text>
+  <text class="label" x="655" y="175">SERVER</text>
+
+  <path class="arrow" d="M200,150 L318,150"/>
+  <path class="arrow" d="M500,150 L618,150"/>
+
+  <text class="sub" x="220" y="140">"can I have…"</text>
+  <text class="sub" x="510" y="140">"charge this card"</text>
+
+  <text class="sub" x="90" y="250">These are roles, not machines — the same device can be a</text>
+  <text class="sub" x="90" y="268">server in one conversation and a client in the next.</text>
+</svg>

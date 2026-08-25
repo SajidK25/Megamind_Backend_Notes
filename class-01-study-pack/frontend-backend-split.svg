@@ -1,0 +1,23 @@
+<svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <style>
+    .box { fill: none; stroke: #33322e; stroke-width: 2; }
+    .title { font-size: 16px; font-weight: bold; fill: #33322e; }
+    .sub { font-size: 12px; fill: #6b6a66; }
+    .accent { fill: #d97a3b; font-size: 12px; font-weight: bold; }
+  </style>
+  <text class="title" x="40" y="35">The part users see</text>
+  <rect class="box" x="40" y="55" width="330" height="100" rx="8"/>
+  <text class="sub" x="60" y="90">Everything the user can open,</text>
+  <text class="sub" x="60" y="108">look at, and tap.</text>
+  <text class="accent" x="60" y="140">FRONTEND — always a client</text>
+
+  <text class="title" x="430" y="35">The part they never see</text>
+  <rect class="box" x="430" y="55" width="330" height="100" rx="8"/>
+  <text class="sub" x="450" y="90">A machine somewhere else</text>
+  <text class="sub" x="450" y="108">that does the work and keeps data.</text>
+  <text class="accent" x="450" y="140">BACKEND — server, sometimes client too</text>
+
+  <text class="sub" x="40" y="200">Client/server describes one conversation.</text>
+  <text class="sub" x="40" y="220">Frontend/backend describes what a user is ever shown.</text>
+  <text class="sub" x="40" y="250">The two splits do not line up.</text>
+</svg>

@@ -1,0 +1,20 @@
+<svg viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <style>
+    .box { fill: none; stroke: #33322e; stroke-width: 1.5; }
+    .title { font-size: 14px; font-weight: bold; fill: #33322e; }
+    .sub { font-size: 12px; fill: #6b6a66; }
+  </style>
+  <rect class="box" x="30" y="30" width="300" height="160" rx="8"/>
+  <text class="title" x="50" y="60">HTTP-facing work</text>
+  <text class="sub" x="50" y="90">Terminating TLS</text>
+  <text class="sub" x="50" y="108">Serving static files</text>
+  <text class="sub" x="50" y="126">Compression &amp; caching</text>
+  <text class="sub" x="50" y="144">Routing, connections</text>
+
+  <rect class="box" x="370" y="30" width="300" height="160" rx="8"/>
+  <text class="title" x="390" y="60">Application work</text>
+  <text class="sub" x="390" y="90">Business logic</text>
+  <text class="sub" x="390" y="108">App-level routes</text>
+  <text class="sub" x="390" y="126">Talking to the database</text>
+  <text class="sub" x="390" y="144">Building the response</text>
+</svg>

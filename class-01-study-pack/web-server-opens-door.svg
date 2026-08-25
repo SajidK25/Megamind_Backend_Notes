@@ -1,0 +1,20 @@
+<svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <style>
+    .box { fill: none; stroke: #33322e; stroke-width: 2; }
+    .title { font-size: 15px; font-weight: bold; fill: #33322e; }
+    .sub { font-size: 12px; fill: #6b6a66; }
+    .arrow { stroke: #d97a3b; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+  </style>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#d97a3b"/></marker></defs>
+  <rect class="box" x="40" y="60" width="220" height="90" rx="8"/>
+  <text class="title" x="60" y="95">Web server</text>
+  <text class="sub" x="60" y="120">FORWARDS</text>
+
+  <rect class="box" x="440" y="60" width="220" height="90" rx="8"/>
+  <text class="title" x="470" y="95">Application</text>
+  <text class="sub" x="470" y="120">DECIDES</text>
+
+  <path class="arrow" d="M260,105 L438,105"/>
+
+  <text class="sub" x="60" y="185">Static files (logo, CSS) served directly, no forward needed.</text>
+</svg>

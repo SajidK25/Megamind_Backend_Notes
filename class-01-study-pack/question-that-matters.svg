@@ -1,0 +1,35 @@
+<svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <style>
+    .box { fill: none; stroke: #33322e; stroke-width: 2; }
+    .boxOn { fill: none; stroke: #d97a3b; stroke-width: 2; }
+    .sub { font-size: 12px; fill: #6b6a66; }
+    .lab { font-size: 11px; fill: #33322e; }
+    .arrow { stroke: #6b6a66; stroke-width: 1.5; fill: none; marker-end: url(#arrow); }
+  </style>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#6b6a66"/></marker></defs>
+
+  <rect class="boxOn" x="300" y="20" width="200" height="50" rx="8"/>
+  <text class="sub" x="325" y="50">HTTP request</text>
+
+  <rect class="box" x="270" y="100" width="260" height="50" rx="8"/>
+  <text class="sub" x="290" y="130">Edge / web tier (Nginx)</text>
+
+  <path class="arrow" d="M400,70 L400,98"/>
+
+  <text class="lab" x="120" y="185">HTTP</text>
+  <text class="lab" x="380" y="185">FastCGI</text>
+  <text class="lab" x="630" y="185">serves itself</text>
+
+  <path class="arrow" d="M330,150 L150,210"/>
+  <path class="arrow" d="M400,150 L400,210"/>
+  <path class="arrow" d="M470,150 L650,210"/>
+
+  <rect class="box" x="60" y="210" width="180" height="50" rx="8"/>
+  <text class="sub" x="80" y="240">Node / Gunicorn</text>
+
+  <rect class="box" x="310" y="210" width="180" height="50" rx="8"/>
+  <text class="sub" x="330" y="240">PHP-FPM workers</text>
+
+  <rect class="box" x="560" y="210" width="180" height="50" rx="8"/>
+  <text class="sub" x="580" y="240">Static files</text>
+</svg>

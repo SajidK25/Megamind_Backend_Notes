@@ -1,0 +1,32 @@
+<svg viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <style>
+    .box { fill: none; stroke: #33322e; stroke-width: 2; }
+    .dashed { fill: none; stroke: #6b6a66; stroke-width: 1.2; stroke-dasharray: 3,3; }
+    .sub { font-size: 12px; fill: #6b6a66; }
+    .arrow { stroke: #d97a3b; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+    .lab { font-size: 11px; fill: #d97a3b; }
+  </style>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#d97a3b"/></marker></defs>
+
+  <rect class="box" x="20" y="90" width="120" height="60" rx="8"/>
+  <text class="sub" x="40" y="125">Browser</text>
+
+  <rect class="box" x="260" y="90" width="120" height="60" rx="8"/>
+  <text class="sub" x="280" y="125">Nginx</text>
+
+  <rect class="box" x="500" y="60" width="180" height="50" rx="6"/>
+  <text class="sub" x="515" y="90">PHP-FPM master</text>
+
+  <rect class="dashed" x="500" y="130" width="50" height="40" rx="4"/>
+  <rect class="dashed" x="565" y="130" width="50" height="40" rx="4"/>
+  <rect class="dashed" x="630" y="130" width="50" height="40" rx="4"/>
+  <text class="sub" x="508" y="155" font-size="10">worker</text>
+  <text class="sub" x="573" y="155" font-size="10">worker</text>
+  <text class="sub" x="638" y="155" font-size="10">worker</text>
+
+  <path class="arrow" d="M140,120 L258,120"/>
+  <text class="lab" x="155" y="112">HTTP</text>
+
+  <path class="arrow" d="M380,110 L498,90"/>
+  <text class="lab" x="400" y="90">FastCGI</text>
+</svg>

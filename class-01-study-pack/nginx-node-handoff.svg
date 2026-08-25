@@ -1,0 +1,26 @@
+<svg viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <style>
+    .box { fill: none; stroke: #33322e; stroke-width: 2; }
+    .sub { font-size: 12px; fill: #6b6a66; }
+    .arrow { stroke: #d97a3b; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+    .lab { font-size: 11px; fill: #d97a3b; }
+  </style>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#d97a3b"/></marker></defs>
+
+  <rect class="box" x="20" y="80" width="140" height="70" rx="8"/>
+  <text class="sub" x="40" y="120">Browser</text>
+
+  <rect class="box" x="280" y="80" width="140" height="70" rx="8"/>
+  <text class="sub" x="300" y="115">Nginx</text>
+  <text class="sub" x="300" y="135">:443</text>
+
+  <rect class="box" x="540" y="80" width="140" height="70" rx="8"/>
+  <text class="sub" x="555" y="115">Node.js</text>
+  <text class="sub" x="555" y="135">:3000</text>
+
+  <path class="arrow" d="M160,110 L278,110"/>
+  <text class="lab" x="175" y="100">HTTPS</text>
+
+  <path class="arrow" d="M420,120 L538,120"/>
+  <text class="lab" x="435" y="140">proxy_pass (HTTP)</text>
+</svg>

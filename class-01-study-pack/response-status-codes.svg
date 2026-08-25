@@ -1,0 +1,25 @@
+<svg viewBox="0 0 800 220" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <style>
+    .box { fill: none; stroke: #33322e; stroke-width: 2; }
+    .code { font-family: monospace; font-size: 16px; fill: #33322e; font-weight: bold; }
+    .title { font-size: 14px; font-weight: bold; fill: #33322e; }
+    .sub { font-size: 11.5px; fill: #6b6a66; }
+  </style>
+  <rect class="box" x="20" y="20" width="240" height="160" rx="8"/>
+  <text class="code" x="35" y="50" fill="#d97a3b">2xx</text>
+  <text class="title" x="35" y="80">It worked</text>
+  <text class="sub" x="35" y="105">Here's what was asked</text>
+  <text class="sub" x="35" y="122">for, or confirmation.</text>
+
+  <rect class="box" x="280" y="20" width="240" height="160" rx="8"/>
+  <text class="code" x="295" y="50">4xx</text>
+  <text class="title" x="295" y="80">Client asked wrong</text>
+  <text class="sub" x="295" y="105">Not logged in, not</text>
+  <text class="sub" x="295" y="122">allowed, or missing.</text>
+
+  <rect class="box" x="540" y="20" width="240" height="160" rx="8"/>
+  <text class="code" x="555" y="50">5xx</text>
+  <text class="title" x="555" y="80">Server failed</text>
+  <text class="sub" x="555" y="105">Request was fine, server</text>
+  <text class="sub" x="555" y="122">fell over.</text>
+</svg>

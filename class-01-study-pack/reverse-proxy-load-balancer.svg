@@ -1,0 +1,27 @@
+<svg viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <style>
+    .box { fill: none; stroke: #33322e; stroke-width: 2; }
+    .sub { font-size: 12px; fill: #6b6a66; }
+    .arrow { stroke: #d97a3b; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+  </style>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#d97a3b"/></marker></defs>
+
+  <rect class="box" x="20" y="100" width="120" height="60" rx="8"/>
+  <text class="sub" x="35" y="135">A visitor</text>
+
+  <rect class="box" x="230" y="90" width="180" height="80" rx="8"/>
+  <text class="sub" x="245" y="120">Reverse proxy</text>
+  <text class="sub" x="245" y="140">· load balancer</text>
+
+  <rect class="box" x="540" y="30" width="140" height="45" rx="6"/>
+  <rect class="box" x="540" y="90" width="140" height="45" rx="6"/>
+  <rect class="box" x="540" y="150" width="140" height="45" rx="6"/>
+  <text class="sub" x="555" y="57">Copy of app A</text>
+  <text class="sub" x="555" y="117">Copy of app B</text>
+  <text class="sub" x="555" y="177">Copy of app C</text>
+
+  <path class="arrow" d="M140,130 L228,130"/>
+  <path class="arrow" d="M410,110 L538,52"/>
+  <path class="arrow" d="M410,125 L538,112"/>
+  <path class="arrow" d="M410,140 L538,172"/>
+</svg>
