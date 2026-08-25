@@ -843,25 +843,58 @@ Then: `curl -i -X POST http://127.0.0.1:8000/v1/checks` and read the raw respons
 
 ## 4.5 Versions, and head-of-line blocking
 
-**What it is.**
+**What it is.** Four versions, each fixing the bottleneck the previous one exposed. The HTTP *semantics* never changed — a `GET` is a `GET` in all four. What changed is how the message travels.
 
-| Version | What changed |
-|---|---|
-| HTTP/1.0 | A new connection and handshake for every single file |
-| HTTP/1.1 | The connection is reused, but one slow reply still blocks the rest |
-| HTTP/2 | Many requests travel at once on one connection (**multiplexing**) |
-| HTTP/3 | Runs on QUIC over UDP, so one lost packet delays only its own reply |
-
-|  | HTTP/1.1 | HTTP/2 | HTTP/3 |
+| Version | Year | The problem it fixed | The problem it left |
 |---|---|---|---|
-| Requests at once | One | Many | Many |
-| One lost packet | Everything waits | All streams wait | Only that stream waits |
-| Runs on | TCP | TCP | QUIC over UDP |
-| WiFi → mobile data | Connection drops | Connection drops | Connection survives |
+| HTTP/1.0 | 1996 | — | A whole new connection + handshake per file |
+| HTTP/1.1 | 1997 | Reuses the connection; adds `Host` | One request in flight at a time |
+| HTTP/2 | 2015 | Many requests at once on one connection | TCP still stalls all of them on one loss |
+| HTTP/3 | 2022 | Per-stream loss recovery; faster setup | UDP is blocked on some corporate networks |
 
-The subtlety worth understanding: HTTP/2 fixed head-of-line blocking *at the HTTP layer* but not at the TCP layer, because TCP still refuses to deliver byte 500 before byte 499 — so one lost packet stalls every multiplexed stream. HTTP/3 moves to QUIC over UDP and does its own per-stream reliability, so a loss only affects the stream it belonged to. QUIC also carries a connection ID rather than relying on the five-tuple, which is why a HTTP/3 connection survives you walking out of WiFi range.
+**HTTP/1.0 — one connection per file.** Every image, stylesheet and script paid its own TCP handshake, and later its own TLS handshake too. A page with 30 assets paid that 30 times. The workaround of the era was sprite sheets: glue 20 icons into one image so it costs one connection.
 
-**Your application code doesn't change for any of this.** Only the way it travels is different.
+**HTTP/1.1 — keep the connection open.** `Connection: keep-alive` became the default, so setup is paid once. But the connection is a single lane: one request, one response, then the next. A slow endpoint at the front of the queue delays everything behind it, which is *head-of-line blocking at the application layer*. Browsers hacked around it by opening ~6 connections per hostname, and sites hacked around *that* with "domain sharding" — serving assets from `img1.example.com`, `img2.example.com` to unlock more parallel connections. Both hacks are now counterproductive.
+
+**HTTP/2 — many lanes, one road.** Requests become numbered **streams** interleaved as binary frames over one connection, so 100 requests can be in flight together (**multiplexing**). Headers get compressed with HPACK, which matters more than it sounds: a `Cookie` header repeated on 100 requests used to be most of the upload. Sharding and sprite sheets became harmful, because you're now paying extra handshakes to defeat the multiplexing you already have.
+
+**HTTP/3 — same idea, new foundation.** Identical semantics to HTTP/2, but the transport underneath is replaced with QUIC, which runs over UDP.
+
+![Animated diagram: the same three requests under HTTP/1.0, 1.1, 2 and 3, showing nine, five, three and two round trips respectively](http-versions-timeline.svg)
+
+*Same three files, four versions, one timeline. Amber is setup you gain nothing from. Note that HTTP/3's advantage is not only multiplexing — its handshake is one round trip instead of two, because QUIC does transport and encryption in the same exchange.*
+
+### Head-of-line blocking, precisely
+
+The phrase gets used for two different problems, one layer apart. Being able to separate them is the actual understanding:
+
+- **At the HTTP layer (1.1):** only one request may be outstanding, so request 2 waits for response 1 to finish. HTTP/2 solved this.
+- **At the TCP layer (2):** TCP delivers a byte stream *in order*. It will not hand byte 500 to your application until byte 499 arrives. Multiplexing 100 streams into one TCP connection means one dropped packet freezes all 100 — even though 99 of them have their data sitting in the kernel buffer already. HTTP/2 cannot fix this, because the rule lives in TCP, not HTTP.
+
+![Animated diagram: one lost packet under HTTP/1.1, HTTP/2 and HTTP/3 — everything queued waits, all streams wait, and only the affected stream waits](head-of-line-blocking.svg)
+
+*The middle case is the counter-intuitive one: under HTTP/2 the css and image have already physically arrived on your machine. TCP is refusing to hand them upward until the gap is filled. All that queueing is invisible to your code.*
+
+The practical consequence: **HTTP/2's advantage shrinks as packet loss rises.** On clean fibre it beats HTTP/1.1 comfortably. On a congested mobile connection at 2% loss, multiplexing into one TCP connection can be *worse* than 1.1's six independent connections, because six connections mean a loss stalls only a sixth of your traffic. That's the exact hole HTTP/3 was built to fill — and why it matters far more in Dhaka on 4G than in a datacentre.
+
+### QUIC
+
+**What it is.** QUIC is a transport protocol — TCP's replacement, not HTTP's. It runs over UDP for one unglamorous reason: the internet's middleboxes (routers, NATs, corporate firewalls) only really understand TCP and UDP, and a genuinely new protocol number would be dropped everywhere. UDP is the escape hatch that lets a new transport be deployed without replacing hardware. QUIC then rebuilds reliability, ordering and congestion control *itself*, in user space.
+
+Four things it does that TCP cannot:
+
+1. **Per-stream reliability.** Streams are first-class in the transport, so QUIC knows a lost packet belonged to stream 3 and only stalls stream 3.
+2. **One-round-trip setup, or zero.** TLS 1.3 is built into the handshake rather than layered on top, so connect and encrypt happen together — one round trip, or **0-RTT** on resumption, where the first data packet rides along with the handshake. (0-RTT data is replayable, so it's only safe for idempotent requests — the two ideas from §4.2 meeting again.)
+3. **Connection migration.** A QUIC connection is identified by a **connection ID**, not the five-tuple from §2.4. Change WiFi to mobile data and your IP changes, but the connection ID doesn't — the session continues. On TCP it would die and rebuild from scratch.
+4. **Almost everything is encrypted**, including most transport metadata. Middleboxes can no longer inspect or "optimise" it, which is a feature — that meddling is what ossified TCP in the first place.
+
+![Animated diagram: HTTP/2 on separate TLS and TCP layers versus HTTP/3 on QUIC, comparing setup round trips and what happens when the network changes](quic-vs-tcp.svg)
+
+*The layer collapse on the right is the whole idea. And the connection-ID row at the bottom is the one your phone notices daily — it's why a video call survives leaving the house and a large download often doesn't.*
+
+**The costs**, since QUIC is not free: it burns more CPU than TCP (kernel offloads and years of tuning don't apply yet), some corporate and public networks block or throttle UDP, and debugging is harder because you can't read it with plain `tcpdump` without keys. Clients handle this by racing both and falling back — which is why a site can serve you HTTP/3 on your phone and HTTP/2 at the office.
+
+**Your application code doesn't change for any of this.** A `GET /v1/checks` is identical in all four versions; you don't opt in, you deploy behind a server or CDN that negotiates the best version both sides support. What changes is your *operational* picture: which version a client got, and how much of your latency was setup.
 
 **Try it.**
 
@@ -876,6 +909,9 @@ curl -s -o /dev/null -w "negotiated: %{http_version}\n" https://www.google.com
 1. Check which version five sites you use negotiate. Any still on 1.1?
 2. HTTP/2 removed the need for "domain sharding" and sprite sheets. Explain why in two sentences.
 3. Your monitor should record the negotiated HTTP version per check. Argue whether that's useful signal or noise.
+4. A customer complains the site is fine on desktop and terrible on mobile. Using §4.5, name two version-related explanations and the command that would distinguish them.
+5. Why did HTTP/3 have to run over UDP rather than being given its own IP protocol number?
+6. 0-RTT resumption sends application data before the handshake finishes. Which HTTP methods are safe to send that way, and why does that question have the same answer as the retry question in §4.2?
 
 **Go deeper.**
 - [HTTP/3 explained](https://http3-explained.haxx.se/) — Daniel Stenberg (curl's author), free
