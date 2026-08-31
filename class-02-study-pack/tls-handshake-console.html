@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The TLS handshake — console</title>
+<style>
+:root{--bg:#FAFAF7;--card:#F1EFE8;--txt:#2C2C2A;--sec:#5F5E5A;--b:#B4B2A9;--ok:#1D9E75;--bad:#E24B4A;--warn:#D85A30;--acc:#3C3489}
+@media (prefers-color-scheme:dark){:root{--bg:#1A1A18;--card:#262624;--txt:#EDEDE8;--sec:#B4B2A9;--b:#5F5E5A;--ok:#5DCAA5;--bad:#F08A88;--warn:#EE9A6E;--acc:#CECBF6}}
+body{margin:0;padding:2rem 1rem;background:var(--bg);color:var(--txt);
+font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.7}
+main{max-width:820px;margin:0 auto}
+h1{font-size:22px;font-weight:500;margin:0 0 .25rem}
+p.lede{color:var(--sec);margin:0 0 1.5rem;font-size:15px}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;white-space:pre-wrap;margin:0;line-height:1.6}
+.pane{background:var(--card);border-radius:8px;padding:1rem}
+.lbl{font-size:12px;color:var(--sec);margin:0 0 8px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+@media (max-width:680px){.grid{grid-template-columns:1fr}}
+.bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;align-items:center}
+button{font:inherit;font-size:13px;background:transparent;color:var(--txt);border:.5px solid var(--b);
+border-radius:8px;padding:6px 12px;cursor:pointer}
+button:hover{background:var(--card)}
+button:disabled{opacity:.4;cursor:default}
+button.on{border-color:var(--acc);color:var(--acc)}
+.step{display:flex;gap:10px;padding:6px 0;border-bottom:.5px solid var(--b);font-size:13px}
+.step:last-child{border-bottom:0}
+.step .n{color:var(--sec);font-family:ui-monospace,monospace;font-size:12px;min-width:1.4em}
+.step.done .n{color:var(--ok)}
+.step.pend{opacity:.35}
+.tag{font-size:11px;border-radius:6px;padding:1px 7px;border:.5px solid var(--b);color:var(--sec)}
+.tag.enc{color:var(--ok);border-color:var(--ok)}
+.verdict{font-size:14px;margin:0}
+.verdict.ok{color:var(--ok)}
+.verdict.bad{color:var(--bad)}
+</style></head><body><main>
+
+<h1>The TLS handshake</h1>
+<p class="lede">Class 02 Part Two &sect;5.7 and &sect;5.8 &mdash; step the handshake one message at a time, then swap the certificate for a broken one and watch which check fails.</p>
+
+<p class="lbl">Certificate the server will present</p>
+<div class="bar" id="certbar">
+<button data-c="valid" class="on" onclick="pick('valid')">valid</button>
+<button data-c="expired" onclick="pick('expired')">expired</button>
+<button data-c="selfsigned" onclick="pick('selfsigned')">self&#8209;signed</button>
+<button data-c="wronghost" onclick="pick('wronghost')">wrong hostname</button>
+<button data-c="incomplete" onclick="pick('incomplete')">incomplete chain</button>
+</div>
+
+<div class="bar">
+<button id="next" onclick="step()">next message &rarr;</button>
+<button onclick="runAll()">run whole handshake</button>
+<button onclick="reset()">reset</button>
+<span class="tag" id="encstate">not encrypted yet</span>
+</div>
+
+<div class="grid">
+<div class="pane"><p class="lbl">Wire &mdash; browser to server</p><p class="mono" id="wire">press &ldquo;next message&rdquo;</p></div>
+<div class="pane"><p class="lbl">What each side knows</p><p class="mono" id="know">&mdash;</p></div>
+</div>
+
+<div class="pane" style="margin-top:12px"><p class="lbl">Handshake steps</p><div id="steps"></div></div>
+
+<div class="pane" style="margin-top:12px"><p class="lbl">Certificate checks</p><p class="mono" id="checks">not reached yet</p></div>
+
+<div class="pane" style="margin-top:12px"><p class="lbl">Verdict</p>
+<p class="verdict" id="verdict">Nothing sent yet.</p>
+<p id="note" style="margin:.5rem 0 0;font-size:14px;color:var(--sec)">The client sends its key share in the very first message &mdash; that is the TLS&nbsp;1.3 optimisation that saves a round trip.</p></div>
+
+<script>
+var CERTS={
+ valid:{subject:"CN=product.com",san:"product.com, www.product.com",issuer:"Let's Encrypt R11",
+        chain:["Root CA (in OS store)","Let's Encrypt R11 (intermediate)","product.com (leaf)"],
+        dates:"12 Aug 2026 - 10 Nov 2026",
+        checks:{chain:true,name:true,date:true,sig:true},
+        err:null},
+ expired:{subject:"CN=product.com",san:"product.com, www.product.com",issuer:"Let's Encrypt R11",
+        chain:["Root CA (in OS store)","Let's Encrypt R11 (intermediate)","product.com (leaf)"],
+        dates:"12 Apr 2025 - 11 Jul 2025",
+        checks:{chain:true,name:true,date:false,sig:true},
+        err:"curl: (60) SSL certificate problem: certificate has expired",
+        why:"Everything about this certificate is genuine. It is simply past its validity window, which is why an expiry monitor (openssl x509 -checkend) is the single highest-value TLS check you can run."},
+ selfsigned:{subject:"CN=product.com",san:"product.com",issuer:"CN=product.com (itself)",
+        chain:["product.com (leaf, signs itself)"],
+        dates:"12 Aug 2026 - 10 Aug 2036",
+        checks:{chain:false,name:true,date:true,sig:true},
+        err:"curl: (60) SSL certificate problem: self signed certificate",
+        why:"The signature verifies, but it verifies against itself. The chain never reaches a root in our trust store, so nothing outside the certificate vouches for it."},
+ wronghost:{subject:"CN=other-site.com",san:"other-site.com",issuer:"Let's Encrypt R11",
+        chain:["Root CA (in OS store)","Let's Encrypt R11 (intermediate)","other-site.com (leaf)"],
+        dates:"12 Aug 2026 - 10 Nov 2026",
+        checks:{chain:true,name:false,date:true,sig:true},
+        err:"curl: (60) SSL: no alternative certificate subject name matches target host name 'product.com'",
+        why:"A perfectly valid certificate for a different domain. This is exactly the attack certificates exist to stop: the machine answering has a real certificate, just not for the name we asked for."},
+ incomplete:{subject:"CN=product.com",san:"product.com, www.product.com",issuer:"Let's Encrypt R11",
+        chain:["Root CA (in OS store)","??? intermediate not sent by the server","product.com (leaf)"],
+        dates:"12 Aug 2026 - 10 Nov 2026",
+        checks:{chain:false,name:true,date:true,sig:true},
+        err:"curl: (60) SSL certificate problem: unable to get local issuer certificate",
+        why:"The server sent the leaf but not the intermediate. Browsers often fetch the missing link and succeed anyway, so this is the classic 'works in Chrome, fails in the mobile app and in CI' bug."}
+};
+
+var STEPS=[
+ {n:"1",t:"ClientHello",
+  wire:"ClientHello\n  server_name (SNI): product.com\n  versions: TLS 1.3\n  ciphers: TLS_AES_128_GCM_SHA256, ...\n  key_share: X25519 <my public half>",
+  know:"browser: my secret + my public half\nserver: nothing yet\n\nthe hostname is in the clear here\n(the network needs it, and it is\nthe one thing TLS does not hide)",
+  enc:false,
+  note:"Plain text, and the only part of the whole connection a snooper can read. Note the key share is already here."},
+ {n:"2",t:"ServerHello + Certificate",
+  wire:"ServerHello\n  cipher: TLS_AES_128_GCM_SHA256\n  key_share: X25519 <my public half>\nCertificate\n  <the chain>\nCertificateVerify\n  <signature over the transcript>",
+  know:"browser: their half + my secret\nserver: my half + their secret\n\n= the same shared key, computed\n  independently on both sides.\n  The key itself never travelled.",
+  enc:true,
+  note:"Both sides can now compute the same key. Everything after this point is encrypted — including the certificate in real TLS 1.3."},
+ {n:"3",t:"Certificate checked",
+  wire:"(browser, locally — nothing on the wire)\n  walk the chain to a trusted root\n  match the hostname against SAN\n  check the validity dates\n  verify CertificateVerify signature",
+  know:"browser: I have a key with SOMEONE\n\nthis step is what turns that into\n'I have a key with product.com'.\nDiffie-Hellman alone cannot say\nwho is on the other end.",
+  enc:true,
+  note:"Encryption started at step 2, identity is established only now. That ordering is safe: the Finished message at step 4 covers the whole transcript, so nothing earlier can have been tampered with undetected."},
+ {n:"4",t:"Finished, then application data",
+  wire:"Finished\n  MAC over the entire handshake transcript\n\n--- application data, encrypted ---\nGET / HTTP/1.1\nHost: product.com",
+  know:"both: same key, verified identity,\nverified transcript.\n\nthe HTTP request finally goes.",
+  enc:true,
+  note:"If any earlier message had been altered in flight, the two transcript MACs would differ and the connection would die here rather than carrying tampered data."}
+];
+
+var cert="valid",i=0,failedAt=null;
+var wire=document.getElementById("wire"),know=document.getElementById("know"),
+    checks=document.getElementById("checks"),verdict=document.getElementById("verdict"),
+    note=document.getElementById("note"),stepsEl=document.getElementById("steps"),
+    encstate=document.getElementById("encstate"),nextBtn=document.getElementById("next");
+
+function drawSteps(){
+ stepsEl.innerHTML=STEPS.map(function(s,k){
+  var cls=k<i?"step done":(k===i?"step":"step pend");
+  var mark=k<i?(failedAt!==null&&k>=failedAt?"✗":"✓"):"·";
+  return '<div class="'+cls+'"><span class="n">'+mark+'</span><span>'+s.n+' &middot; '+s.t+'</span></div>';
+ }).join("");
+}
+function pick(c){
+ cert=c;
+ [].forEach.call(document.querySelectorAll("#certbar button"),function(b){
+   b.className=(b.getAttribute("data-c")===c)?"on":"";});
+ reset();
+}
+function reset(){
+ i=0;failedAt=null;
+ wire.textContent="press “next message”";know.textContent="—";
+ checks.textContent="not reached yet";
+ verdict.className="verdict";verdict.textContent="Nothing sent yet.";
+ note.textContent="Certificate selected: "+cert+". Step through and watch where it breaks.";
+ encstate.textContent="not encrypted yet";encstate.className="tag";
+ nextBtn.disabled=false;drawSteps();
+}
+function renderChecks(){
+ var c=CERTS[cert],r=c.checks;
+ function line(ok,label,detail){return (ok?"✓ ":"✗ ")+label.padEnd(30," ")+detail;}
+ checks.textContent=[
+  "chain presented by the server:",
+  c.chain.map(function(x){return "    "+x;}).join("\n"),
+  "",
+  line(r.sig,"signature verifies","CertificateVerify over the transcript"),
+  line(r.chain,"chain reaches a trusted root",c.issuer),
+  line(r.name,"hostname matches","SAN: "+c.san),
+  line(r.date,"inside validity dates",c.dates)
+ ].join("\n");
+}
+function step(){
+ if(i>=STEPS.length)return;
+ var s=STEPS[i];
+ wire.textContent=s.wire;know.textContent=s.know;
+ if(s.enc){encstate.textContent="encrypted from here";encstate.className="tag enc";}
+ if(i===2){
+  renderChecks();
+  var c=CERTS[cert],r=c.checks;
+  if(!(r.chain&&r.name&&r.date&&r.sig)){
+   failedAt=2;i=3;drawSteps();
+   verdict.className="verdict bad";
+   verdict.textContent="Connection refused by the client — "+c.err;
+   note.textContent=c.why;
+   nextBtn.disabled=true;return;
+  }
+ }
+ note.textContent=s.note;
+ i++;drawSteps();
+ if(i>=STEPS.length){
+  verdict.className="verdict ok";
+  verdict.textContent="Handshake complete. Encrypted, integrity-checked, and we know we are talking to product.com.";
+  nextBtn.disabled=true;
+ }
+}
+function runAll(){reset();var t=0;var iv=setInterval(function(){
+ if(nextBtn.disabled||i>=STEPS.length){clearInterval(iv);return;}step();},600);}
+reset();
+</script>
+</main></body></html>

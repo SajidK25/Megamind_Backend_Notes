@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="320" viewBox="0 0 680 320" role="img">
+<title>SSH local port forwarding to a private database</title>
+<desc>The laptop listens on 127.0.0.1 port 5432 and carries the connection encrypted over SSH port 22 to a bastion server, which opens a plain connection onward to db.internal port 5432 inside the private network.</desc>
+<style>
+.t{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;fill:#3C3489}
+.th{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;font-weight:500;fill:#2C2C2A}
+.ts{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:12px;fill:#5F5E5A}
+.tt{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;font-weight:500;fill:#085041}
+.tts{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:12px;fill:#1D9E75}
+.m{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;fill:#2C2C2A}
+.ml{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;fill:#5F5E5A}
+.hostbox{fill:#EEEDFE;stroke:#7F77DD}
+.rtbox{fill:#F1EFE8;stroke:#888780}
+.svbox{fill:#E1F5EE;stroke:#1D9E75}
+.wire{stroke:#B4B2A9}
+.tube{fill:none;stroke:#7F77DD}
+.panel{fill:#F1EFE8}
+@media (prefers-color-scheme:dark){
+.t{fill:#CECBF6}.th{fill:#EDEDE8}.ts{fill:#B4B2A9}.tt{fill:#9FE1CB}.tts{fill:#5DCAA5}
+.m{fill:#EDEDE8}.ml{fill:#B4B2A9}
+.hostbox{fill:#3C3489;stroke:#AFA9EC}.rtbox{fill:#2C2C2A;stroke:#B4B2A9}.svbox{fill:#085041;stroke:#5DCAA5}
+.wire{stroke:#5F5E5A}.tube{stroke:#AFA9EC}.panel{fill:#262624}}
+</style>
+
+<rect x="352" y="30" width="298" height="150" rx="12" fill="none" class="wire" stroke-width="0.5" stroke-dasharray="4 4"/>
+<text class="ts" x="501" y="48" text-anchor="middle">private network · no public address</text>
+
+<rect class="hostbox" x="30" y="76" width="140" height="72" rx="10" stroke-width="0.5"/>
+<text class="t" x="100" y="102" text-anchor="middle">Our laptop</text>
+<text class="ml" x="100" y="122" text-anchor="middle">listens on</text>
+<text class="ml" x="100" y="138" text-anchor="middle">127.0.0.1:5432</text>
+
+<rect class="rtbox" x="374" y="76" width="140" height="72" rx="10" stroke-width="0.5"/>
+<text class="th" x="444" y="102" text-anchor="middle">Bastion</text>
+<text class="ml" x="444" y="122" text-anchor="middle">port 22 open</text>
+<text class="ml" x="444" y="138" text-anchor="middle">resolves db.internal</text>
+
+<rect class="svbox" x="536" y="76" width="100" height="72" rx="10" stroke-width="0.5"/>
+<text class="tt" x="586" y="102" text-anchor="middle">Database</text>
+<text class="ml" x="586" y="122" text-anchor="middle">db.internal</text>
+<text class="ml" x="586" y="138" text-anchor="middle">:5432</text>
+
+<!-- encrypted tube -->
+<rect class="tube" x="170" y="94" width="204" height="36" rx="18" stroke-width="1" stroke-dasharray="6 4">
+  <animate attributeName="stroke-dashoffset" values="0;-20" dur="1.2s" repeatCount="indefinite"/>
+</rect>
+<text class="ts" x="272" y="86" text-anchor="middle">SSH on port 22 · encrypted</text>
+
+<line x1="514" y1="112" x2="536" y2="112" class="wire" stroke-width="0.5"/>
+
+<!-- packet -->
+<g>
+  <animateTransform attributeName="transform" type="translate" dur="7s" repeatCount="indefinite"
+    keyTimes="0;0.4;0.5;0.7;1" values="166,104; 366,104; 366,104; 528,104; 528,104"/>
+  <rect x="0" y="0" width="28" height="16" rx="5" fill="#AFA9EC" stroke="#7F77DD" stroke-width="0.5">
+    <animate attributeName="fill" calcMode="discrete" values="#AFA9EC;#5DCAA5" keyTimes="0;0.5" dur="7s" repeatCount="indefinite"/>
+    <animate attributeName="stroke" calcMode="discrete" values="#7F77DD;#1D9E75" keyTimes="0;0.5" dur="7s" repeatCount="indefinite"/>
+  </rect>
+</g>
+
+<rect class="panel" x="30" y="196" width="610" height="98" rx="10"/>
+<text class="m" x="48" y="222">$ ssh -N -L 5432:db.internal:5432 deploy@bastion.product.com</text>
+<text class="m" x="48" y="244">$ psql -h 127.0.0.1 -p 5432</text>
+<text class="ts" x="48" y="270">Listen on my 5432, carry it over SSH, and from the bastion open a connection to db.internal:5432.</text>
+<text class="ts" x="48" y="288">The bastion resolves that name, not us. Our tools believe the database is local, and nothing is exposed to the internet.</text>
+</svg>

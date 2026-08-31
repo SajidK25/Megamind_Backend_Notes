@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="320" viewBox="0 0 680 320" role="img">
+<title>How an email reaches the other side</title>
+<desc>A mail user agent submits a message to our mail transfer agent on port 587, which looks up the recipient domain's MX record in DNS, connects to their mail transfer agent on port 25, which passes the message to a mail delivery agent that files it in the mailbox. IMAP reads it back out.</desc>
+<style>
+.t{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:13px;fill:#3C3489}
+.th{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:13px;font-weight:500;fill:#2C2C2A}
+.ts{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:11px;fill:#5F5E5A}
+.tt{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:13px;font-weight:500;fill:#085041}
+.ml{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;fill:#5F5E5A}
+.hostbox{fill:#EEEDFE;stroke:#7F77DD}
+.rtbox{fill:#F1EFE8;stroke:#888780}
+.svbox{fill:#E1F5EE;stroke:#1D9E75}
+.wire{stroke:#B4B2A9}
+.panel{fill:#F1EFE8}
+@media (prefers-color-scheme:dark){
+.t{fill:#CECBF6}.th{fill:#EDEDE8}.ts{fill:#B4B2A9}.tt{fill:#9FE1CB}.ml{fill:#B4B2A9}
+.hostbox{fill:#3C3489;stroke:#AFA9EC}.rtbox{fill:#2C2C2A;stroke:#B4B2A9}.svbox{fill:#085041;stroke:#5DCAA5}
+.wire{stroke:#5F5E5A}.panel{fill:#262624}}
+</style>
+<defs>
+<marker id="mh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+  <path d="M0,0 L10,5 L0,10 z" fill="#B4B2A9"/></marker>
+</defs>
+
+<text class="ts" x="130" y="30" text-anchor="middle">our side</text>
+<text class="ts" x="530" y="30" text-anchor="middle">their side</text>
+
+<rect class="hostbox" x="20" y="60" width="112" height="70" rx="10" stroke-width="0.5"/>
+<text class="t" x="76" y="84" text-anchor="middle">Sender</text>
+<text class="ts" x="76" y="102" text-anchor="middle">MUA</text>
+<text class="ts" x="76" y="119" text-anchor="middle">mail client</text>
+
+<rect class="hostbox" x="152" y="60" width="112" height="70" rx="10" stroke-width="0.5"/>
+<text class="t" x="208" y="84" text-anchor="middle">Our server</text>
+<text class="ts" x="208" y="102" text-anchor="middle">MTA</text>
+<text class="ml" x="208" y="119" text-anchor="middle">port 587</text>
+
+<rect class="rtbox" x="284" y="60" width="112" height="70" rx="10" stroke-width="0.5"/>
+<text class="th" x="340" y="84" text-anchor="middle">MX lookup</text>
+<text class="ts" x="340" y="102" text-anchor="middle">DNS</text>
+<text class="ml" x="340" y="119" text-anchor="middle">who takes it</text>
+
+<rect class="svbox" x="416" y="60" width="112" height="70" rx="10" stroke-width="0.5"/>
+<text class="tt" x="472" y="84" text-anchor="middle">Their server</text>
+<text class="ts" x="472" y="102" text-anchor="middle">MTA</text>
+<text class="ml" x="472" y="119" text-anchor="middle">port 25</text>
+
+<rect class="svbox" x="548" y="60" width="112" height="70" rx="10" stroke-width="0.5"/>
+<text class="tt" x="604" y="84" text-anchor="middle">Inbox</text>
+<text class="ts" x="604" y="102" text-anchor="middle">MDA</text>
+<text class="ts" x="604" y="119" text-anchor="middle">files it</text>
+
+<line x1="132" y1="95" x2="152" y2="95" class="wire" stroke-width="0.5" marker-end="url(#mh)"/>
+<line x1="264" y1="95" x2="284" y2="95" class="wire" stroke-width="0.5" marker-end="url(#mh)"/>
+<line x1="396" y1="95" x2="416" y2="95" class="wire" stroke-width="0.5" marker-end="url(#mh)"/>
+<line x1="528" y1="95" x2="548" y2="95" class="wire" stroke-width="0.5" marker-end="url(#mh)"/>
+
+<!-- envelope moving hop to hop, pausing at each queue -->
+<g>
+  <animateTransform attributeName="transform" type="translate" dur="12s" repeatCount="indefinite"
+    keyTimes="0;0.1;0.22;0.34;0.46;0.58;0.7;0.82;0.94;1"
+    values="60,140; 60,140; 192,140; 192,140; 324,140; 324,140; 456,140; 456,140; 588,140; 588,140"/>
+  <rect x="0" y="0" width="32" height="20" rx="3" fill="#AFA9EC" stroke="#7F77DD" stroke-width="0.5"/>
+  <path d="M0,0 L16,12 L32,0" fill="none" stroke="#7F77DD" stroke-width="0.5"/>
+</g>
+
+<text class="ts" x="340" y="184" text-anchor="middle">store and forward · each hop accepts the message, queues it, and retries for days if the next one is down</text>
+
+<!-- read back -->
+<line x1="604" y1="212" x2="76" y2="212" class="wire" stroke-width="0.5" stroke-dasharray="4 4" marker-end="url(#mh)"/>
+<text class="ts" x="340" y="205" text-anchor="middle">reading it back out is a different protocol · IMAP 993 or POP3 995</text>
+
+<rect class="panel" x="20" y="234" width="640" height="70" rx="10"/>
+<text class="th" x="38" y="258">SMTP is the language the transfer agents speak to each other.</text>
+<text class="ts" x="38" y="280">It only ever pushes a message forward and never opens a mailbox. The delivery agent just files it;</text>
+<text class="ts" x="38" y="296">&#8220;sent&#8221; means the next server accepted it, not that anyone received it.</text>
+</svg>

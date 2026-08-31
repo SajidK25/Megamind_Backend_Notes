@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="300" viewBox="0 0 680 300" role="img">
+<title>TLS termination at a proxy or CDN</title>
+<desc>A browser sends an HTTPS request to a proxy or CDN that holds the certificate. The proxy decrypts it and forwards plain HTTP to the application over the private network, adding X-Forwarded-Proto and X-Forwarded-For headers.</desc>
+<style>
+.t{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;fill:#3C3489}
+.th{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;font-weight:500;fill:#2C2C2A}
+.ts{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:12px;fill:#5F5E5A}
+.tt{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;font-weight:500;fill:#085041}
+.tts{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:12px;fill:#1D9E75}
+.ml{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;fill:#5F5E5A}
+.hostbox{fill:#EEEDFE;stroke:#7F77DD}
+.rtbox{fill:#F1EFE8;stroke:#888780}
+.svbox{fill:#E1F5EE;stroke:#1D9E75}
+.wire{stroke:#B4B2A9}
+.panel{fill:#F1EFE8}
+@media (prefers-color-scheme:dark){
+.t{fill:#CECBF6}.th{fill:#EDEDE8}.ts{fill:#B4B2A9}.tt{fill:#9FE1CB}.tts{fill:#5DCAA5}.ml{fill:#B4B2A9}
+.hostbox{fill:#3C3489;stroke:#AFA9EC}.rtbox{fill:#2C2C2A;stroke:#B4B2A9}.svbox{fill:#085041;stroke:#5DCAA5}
+.wire{stroke:#5F5E5A}.panel{fill:#262624}}
+</style>
+
+<rect x="256" y="34" width="384" height="150" rx="12" fill="none" class="wire" stroke-width="0.5" stroke-dasharray="4 4"/>
+<text class="ts" x="448" y="52" text-anchor="middle">our private network</text>
+
+<rect class="hostbox" x="30" y="82" width="120" height="56" rx="10" stroke-width="0.5"/>
+<text class="t" x="90" y="106" text-anchor="middle">Browser</text>
+<text class="ts" x="90" y="125" text-anchor="middle">203.0.113.7</text>
+
+<rect class="rtbox" x="278" y="70" width="140" height="80" rx="10" stroke-width="0.5"/>
+<text class="th" x="348" y="98" text-anchor="middle">Proxy or CDN</text>
+<text class="ts" x="348" y="117" text-anchor="middle">holds the certificate</text>
+<text class="ts" x="348" y="135" text-anchor="middle">decrypts here</text>
+
+<rect class="svbox" x="500" y="82" width="120" height="56" rx="10" stroke-width="0.5"/>
+<text class="tt" x="560" y="106" text-anchor="middle">Our app</text>
+<text class="tts" x="560" y="125" text-anchor="middle">never sees TLS</text>
+
+<line x1="150" y1="110" x2="278" y2="110" class="wire" stroke-width="0.5"/>
+<line x1="418" y1="110" x2="500" y2="110" class="wire" stroke-width="0.5"/>
+<text class="ts" x="214" y="100" text-anchor="middle">HTTPS · encrypted</text>
+<text class="ts" x="459" y="100" text-anchor="middle">plain HTTP</text>
+
+<!-- travelling request -->
+<g>
+  <animateTransform attributeName="transform" type="translate" dur="8s" repeatCount="indefinite"
+    keyTimes="0;0.35;0.45;0.8;1" values="150,102; 268,102; 268,102; 490,102; 490,102"/>
+  <rect x="0" y="0" width="34" height="18" rx="5" fill="#AFA9EC" stroke="#7F77DD" stroke-width="0.5">
+    <animate attributeName="fill" calcMode="discrete" values="#AFA9EC;#F1EFE8" keyTimes="0;0.45" dur="8s" repeatCount="indefinite"/>
+    <animate attributeName="stroke" calcMode="discrete" values="#7F77DD;#888780" keyTimes="0;0.45" dur="8s" repeatCount="indefinite"/>
+  </rect>
+</g>
+
+<rect class="panel" x="30" y="196" width="610" height="82" rx="10"/>
+<text class="th" x="48" y="220">What the proxy hands back to the app, because decryption threw it away</text>
+<text class="ml" x="48" y="244">X-Forwarded-Proto: https        the original scheme — without it, redirect-to-HTTPS loops forever</text>
+<text class="ml" x="48" y="264">X-Forwarded-For: 203.0.113.7    the real client IP — trust it only from proxies you declare</text>
+</svg>

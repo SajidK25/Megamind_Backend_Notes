@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="360" viewBox="0 0 680 360" role="img">
+<title>The certificate chain of trust</title>
+<desc>The root CA already present in the operating system signs an intermediate, the intermediate signs the leaf certificate for product.com, and the browser verifies each signature, then the hostname and the validity dates.</desc>
+<style>
+.t{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;fill:#3C3489}
+.th{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;font-weight:500;fill:#2C2C2A}
+.ts{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:12px;fill:#5F5E5A}
+.tts{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:12px;fill:#1D9E75}
+.m{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;fill:#2C2C2A}
+.ml{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;fill:#5F5E5A}
+.rootbox{fill:#F1EFE8;stroke:#888780}
+.midbox{fill:#EEEDFE;stroke:#7F77DD}
+.leafbox{fill:#E1F5EE;stroke:#1D9E75}
+.wire{stroke:#B4B2A9}
+.panel{fill:#F1EFE8}
+.tick{fill:#1D9E75}
+@media (prefers-color-scheme:dark){
+.t{fill:#CECBF6}.th{fill:#EDEDE8}.ts{fill:#B4B2A9}.tts{fill:#5DCAA5}
+.m{fill:#EDEDE8}.ml{fill:#B4B2A9}
+.rootbox{fill:#2C2C2A;stroke:#B4B2A9}.midbox{fill:#3C3489;stroke:#AFA9EC}.leafbox{fill:#085041;stroke:#5DCAA5}
+.wire{stroke:#5F5E5A}.panel{fill:#262624}.tick{fill:#5DCAA5}}
+</style>
+<defs>
+<marker id="cah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+  <path d="M0,0 L10,5 L0,10 z" fill="#B4B2A9"/></marker>
+</defs>
+
+<text class="ts" x="150" y="26" text-anchor="middle">what the browser walks</text>
+<text class="ts" x="500" y="26" text-anchor="middle">what it checks at each link</text>
+
+<!-- root -->
+<rect class="rootbox" x="40" y="40" width="220" height="64" rx="10" stroke-width="0.5">
+  <animate attributeName="stroke-width" calcMode="discrete" values="0.5;2;0.5" keyTimes="0;0.08;0.28" dur="12s" repeatCount="indefinite"/>
+</rect>
+<text class="th" x="60" y="66">Root CA</text>
+<text class="ml" x="60" y="86">already in our OS trust store</text>
+
+<line x1="150" y1="104" x2="150" y2="132" class="wire" stroke-width="1" marker-end="url(#cah)"/>
+<text class="ts" x="162" y="123">signs</text>
+
+<!-- intermediate -->
+<rect class="midbox" x="40" y="134" width="220" height="64" rx="10" stroke-width="0.5">
+  <animate attributeName="stroke-width" calcMode="discrete" values="0.5;0.5;2;0.5" keyTimes="0;0.3;0.38;0.58" dur="12s" repeatCount="indefinite"/>
+</rect>
+<text class="th" x="60" y="160">Intermediate</text>
+<text class="ml" x="60" y="180">Let&#8217;s Encrypt R11 · signed by the root</text>
+
+<line x1="150" y1="198" x2="150" y2="226" class="wire" stroke-width="1" marker-end="url(#cah)"/>
+<text class="ts" x="162" y="217">signs</text>
+
+<!-- leaf -->
+<rect class="leafbox" x="40" y="228" width="220" height="86" rx="10" stroke-width="0.5">
+  <animate attributeName="stroke-width" calcMode="discrete" values="0.5;0.5;0.5;2;0.5" keyTimes="0;0.6;0.62;0.68;0.92" dur="12s" repeatCount="indefinite"/>
+</rect>
+<text class="th" x="60" y="254">product.com</text>
+<text class="ml" x="60" y="274">the public key of this site</text>
+<text class="ml" x="60" y="292">valid 12 Aug to 10 Nov</text>
+<text class="ml" x="60" y="308">signed by Let&#8217;s Encrypt R11</text>
+
+<!-- checks -->
+<g opacity="0"><animate attributeName="opacity" values="0;1;1;1" keyTimes="0;0.1;0.92;1" dur="12s" repeatCount="indefinite"/>
+<circle class="tick" cx="330" cy="66" r="5"/>
+<text class="ts" x="348" y="71">this root is one we already trust</text></g>
+
+<g opacity="0"><animate attributeName="opacity" values="0;0;1;1;1" keyTimes="0;0.32;0.4;0.92;1" dur="12s" repeatCount="indefinite"/>
+<circle class="tick" cx="330" cy="160" r="5"/>
+<text class="ts" x="348" y="165">the root&#8217;s signature over it verifies</text></g>
+
+<g opacity="0"><animate attributeName="opacity" values="0;0;0;1;1;1" keyTimes="0;0.62;0.66;0.72;0.92;1" dur="12s" repeatCount="indefinite"/>
+<circle class="tick" cx="330" cy="254" r="5"/>
+<text class="ts" x="348" y="259">the intermediate&#8217;s signature verifies</text>
+<circle class="tick" cx="330" cy="278" r="5"/>
+<text class="ts" x="348" y="283">the name matches the address bar</text>
+<circle class="tick" cx="330" cy="302" r="5"/>
+<text class="ts" x="348" y="307">today is inside the validity dates</text></g>
+
+<rect class="panel" x="40" y="322" width="600" height="30" rx="8"/>
+<text class="ts" x="340" y="342" text-anchor="middle">A certificate proves the domain name only. It says nothing about whether the site is safe.</text>
+</svg>
