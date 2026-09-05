@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="380" viewBox="0 0 680 380" role="img">
+<title>One backend, two representations: a page or data</title>
+<desc>A backend runs the same query and the same rules for two callers. One route ends in res.render and sends finished HTML to a browser, which displays the page. The other ends in res.json and sends values to a phone app, which draws its own screen. A panel lists the fields a naive serialiser would leak.</desc>
+<style>
+.t{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;fill:#3C3489}
+.th{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;font-weight:500;fill:#2C2C2A}
+.ts{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:12px;fill:#5F5E5A}
+.tt{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;font-weight:500;fill:#085041}
+.ml{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;fill:#5F5E5A}
+.mk{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;fill:#3C3489}
+.mg{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;fill:#085041}
+.hostbox{fill:#EEEDFE;stroke:#7F77DD}
+.rtbox{fill:#F1EFE8;stroke:#888780}
+.svbox{fill:#E1F5EE;stroke:#1D9E75}
+.wire{stroke:#B4B2A9}
+.panel{fill:#F1EFE8}
+.line{stroke:#B4B2A9;stroke-width:0.5}
+@media (prefers-color-scheme:dark){
+.t{fill:#CECBF6}.th{fill:#EDEDE8}.ts{fill:#B4B2A9}.tt{fill:#9FE1CB}.ml{fill:#B4B2A9}.mk{fill:#AFA9EC}.mg{fill:#5DCAA5}
+.hostbox{fill:#3C3489;stroke:#AFA9EC}.rtbox{fill:#2C2C2A;stroke:#B4B2A9}.svbox{fill:#085041;stroke:#5DCAA5}
+.wire{stroke:#5F5E5A}.panel{fill:#262624}.line{stroke:#5F5E5A}}
+</style>
+
+<rect class="rtbox" x="24" y="118" width="150" height="94" rx="10" stroke-width="0.5"/>
+<text class="th" x="99" y="146" text-anchor="middle">Our backend</text>
+<text class="ts" x="99" y="167" text-anchor="middle">one query</text>
+<text class="ts" x="99" y="185" text-anchor="middle">one set of rules</text>
+<text class="ts" x="99" y="203" text-anchor="middle">two last lines</text>
+
+<!-- upper branch: HTML -->
+<path d="M174 148 L282 78" class="wire" stroke-width="0.5" fill="none"/>
+<text class="mk" x="196" y="102">res.render → text/html</text>
+
+<rect class="hostbox" x="290" y="34" width="180" height="104" rx="8" stroke-width="0.5"/>
+<rect x="300" y="44" width="60" height="14" rx="4" fill="none" class="line"/>
+<circle cx="376" cy="51" r="3" fill="none" class="line"/><circle cx="388" cy="51" r="3" fill="none" class="line"/>
+<rect x="400" y="44" width="60" height="14" rx="7" fill="none" class="line"/>
+<line x1="302" y1="76" x2="420" y2="76" class="line"/>
+<line x1="302" y1="94" x2="452" y2="94" class="line"/>
+<line x1="302" y1="112" x2="398" y2="112" class="line"/>
+<text class="ts" x="380" y="154" text-anchor="middle">Browser · displays what it was given</text>
+
+<!-- lower branch: JSON -->
+<path d="M174 182 L282 252" class="wire" stroke-width="0.5" fill="none"/>
+<text class="mg" x="196" y="238">res.json → application/json</text>
+
+<rect class="svbox" x="352" y="206" width="56" height="106" rx="8" stroke-width="0.5"/>
+<line x1="364" y1="228" x2="396" y2="228" class="line"/>
+<line x1="364" y1="246" x2="396" y2="246" class="line"/>
+<line x1="364" y1="264" x2="386" y2="264" class="line"/>
+<line x1="364" y1="296" x2="396" y2="296" class="line"/>
+<text class="ts" x="380" y="330" text-anchor="middle">Phone app · draws its own screen</text>
+
+<!-- travelling payloads -->
+<g>
+  <animateTransform attributeName="transform" type="translate" dur="6s" repeatCount="indefinite"
+    keyTimes="0;0.55;1" values="168,140; 276,70; 276,70"/>
+  <rect x="0" y="0" width="46" height="16" rx="5" fill="#AFA9EC" stroke="#7F77DD" stroke-width="0.5"/>
+  <text x="23" y="12" text-anchor="middle" font-family="ui-monospace,monospace" font-size="9" fill="#2C2C2A">&lt;ul&gt;…</text>
+</g>
+<g>
+  <animateTransform attributeName="transform" type="translate" dur="6s" begin="1.2s" repeatCount="indefinite"
+    keyTimes="0;0.55;1" values="168,174; 276,244; 276,244"/>
+  <rect x="0" y="0" width="46" height="16" rx="5" fill="#5DCAA5" stroke="#1D9E75" stroke-width="0.5"/>
+  <text x="23" y="12" text-anchor="middle" font-family="ui-monospace,monospace" font-size="9" fill="#08322A">{ … }</text>
+</g>
+
+<rect class="panel" x="480" y="196" width="176" height="116" rx="10"/>
+<text class="th" x="496" y="220">res.json ships every column</text>
+<text class="mg" x="496" y="242">id, title, price</text>
+<text class="ml" x="496" y="260">status, customer</text>
+<text class="ml" x="496" y="278">cost_price      ← leak</text>
+<text class="ml" x="496" y="296">internal_notes  ← leak</text>
+
+<rect class="panel" x="24" y="240" width="290" height="72" rx="10"/>
+<text class="th" x="40" y="264">The template only printed what it printed.</text>
+<text class="ts" x="40" y="286">The serialiser prints everything unless you</text>
+<text class="ts" x="40" y="303">tell it not to. Serialise deliberately.</text>
+</svg>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How the screen is built — console</title>
+<style>
+:root{--bg:#FAFAF7;--card:#F1EFE8;--txt:#2C2C2A;--sec:#5F5E5A;--b:#B4B2A9;--ok:#1D9E75;--bad:#E24B4A;--warn:#D85A30;--acc:#3C3489}
+@media (prefers-color-scheme:dark){:root{--bg:#1A1A18;--card:#262624;--txt:#EDEDE8;--sec:#B4B2A9;--b:#5F5E5A;--ok:#5DCAA5;--bad:#F08A88;--warn:#EE9A6E;--acc:#CECBF6}}
+body{margin:0;padding:2rem 1rem;background:var(--bg);color:var(--txt);
+font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.7}
+main{max-width:860px;margin:0 auto}
+h1{font-size:22px;font-weight:500;margin:0 0 .25rem}
+h2{font-size:15px;font-weight:500;margin:2rem 0 .5rem}
+p.lede{color:var(--sec);margin:0 0 1.5rem;font-size:15px}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;white-space:pre-wrap;margin:0;line-height:1.6}
+.pane{background:var(--card);border-radius:8px;padding:1rem}
+.lbl{font-size:12px;color:var(--sec);margin:0 0 8px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+@media (max-width:700px){.grid{grid-template-columns:1fr}}
+.bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;align-items:center}
+button{font:inherit;font-size:13px;background:transparent;color:var(--txt);border:.5px solid var(--b);
+border-radius:8px;padding:6px 12px;cursor:pointer}
+button:hover{background:var(--card)}
+button:disabled{opacity:.4;cursor:default}
+button.on{border-color:var(--acc);color:var(--acc)}
+.step{display:flex;gap:10px;padding:6px 0;border-bottom:.5px solid var(--b);font-size:13px;align-items:baseline}
+.step:last-child{border-bottom:0}
+.step .n{color:var(--sec);font-family:ui-monospace,monospace;font-size:12px;min-width:1.4em}
+.step.done .n{color:var(--ok)}
+.step.pend{opacity:.35}
+.step .d{color:var(--sec);font-size:12px}
+.tag{font-size:11px;border-radius:6px;padding:1px 7px;border:.5px solid var(--b);color:var(--sec);white-space:nowrap}
+.tag.html{color:var(--acc);border-color:var(--acc)}
+.tag.json{color:var(--ok);border-color:var(--ok)}
+.tag.js{color:var(--warn);border-color:var(--warn)}
+.screen{border:.5px solid var(--b);border-radius:8px;padding:.75rem;min-height:132px;background:var(--bg)}
+.screen .row{font-size:13px;padding:2px 0}
+.empty{color:var(--sec);font-style:italic;font-size:13px}
+.verdict{font-size:14px;margin:.75rem 0 0}
+.verdict.ok{color:var(--ok)}
+.verdict.bad{color:var(--bad)}
+.verdict.warn{color:var(--warn)}
+table{border-collapse:collapse;width:100%;font-size:13px;margin-top:.5rem}
+th,td{text-align:left;padding:6px 8px;border-bottom:.5px solid var(--b);vertical-align:top}
+th{color:var(--sec);font-weight:400;font-size:12px}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
+footer{color:var(--sec);font-size:13px;margin-top:2rem}
+a{color:var(--acc)}
+</style></head><body><main>
+
+<h1>How the screen is built</h1>
+<p class="lede">Class 03 Part One &sect;4.1&ndash;&sect;4.5 &mdash; pick a rendering mode, step through what the browser actually receives, then switch JavaScript off or view it as a crawler and see what survives.</p>
+
+<p class="lbl">Rendering mode</p>
+<div class="bar" id="modebar">
+<button data-m="mpa" class="on" onclick="pick('mpa')">MPA</button>
+<button data-m="spa" onclick="pick('spa')">SPA</button>
+<button data-m="hybrid" onclick="pick('hybrid')">Hybrid &middot; SSR + hydration</button>
+</div>
+
+<p class="lbl">Who is looking</p>
+<div class="bar" id="clientbar">
+<button data-c="browser" class="on" onclick="setClient('browser')">a browser</button>
+<button data-c="nojs" onclick="setClient('nojs')">a browser with JS off</button>
+<button data-c="crawler" onclick="setClient('crawler')">a crawler / link preview</button>
+</div>
+
+<div class="bar">
+<button id="next" onclick="step()">next request &rarr;</button>
+<button onclick="runAll()">load the whole page</button>
+<button onclick="reset()">reset</button>
+</div>
+
+<div class="grid">
+  <div class="pane">
+    <p class="lbl">Network &mdash; what crosses the wire, in order</p>
+    <div id="steps"></div>
+  </div>
+  <div>
+    <div class="pane">
+      <p class="lbl">What the caller can see right now</p>
+      <div class="screen" id="screen"></div>
+      <p class="verdict" id="verdict"></p>
+    </div>
+  </div>
+</div>
+
+<div class="pane" style="margin-top:12px">
+<p class="lbl">The first response body, verbatim</p>
+<pre class="mono" id="body"></pre>
+</div>
+
+<h2>The two questions</h2>
+<table>
+<tr><th>Mode</th><th>Where was the HTML made?</th><th>Does JavaScript take over?</th><th>Bytes before content</th></tr>
+<tr><td>MPA</td><td>On the server, every page</td><td>No</td><td id="c-mpa"></td></tr>
+<tr><td>SPA</td><td>In the browser, after the bundle runs</td><td>It <em>is</em> the app</td><td id="c-spa"></td></tr>
+<tr><td>Hybrid</td><td>On the server, first page only</td><td>Yes &mdash; hydration</td><td id="c-hybrid"></td></tr>
+</table>
+
+<footer>Numbers here are illustrative, not measured from a real site. Check a real one with
+<code>curl -s https://site.example | head -40</code> and the Network tab &mdash; that is the exercise.</footer>
+
+<script>
+var MODES = {
+  mpa: {
+    label: 'MPA',
+    body: '<!-- GET /orders  →  200 text/html, 4.1 kB -->\n<!doctype html>\n<html><body>\n  <h1>Your orders</h1>\n  <ul>\n    <li>#1042 · 1,200</li>\n    <li>#1043 · 890</li>\n  </ul>\n</body></html>',
+    bytes: 4100,
+    steps: [
+      { m:'GET', p:'/orders', t:'html', d:'the complete page — data already in the markup', gives:'content' }
+    ]
+  },
+  spa: {
+    label: 'SPA',
+    body: '<!-- GET /  →  200 text/html, 0.6 kB -->\n<!doctype html>\n<html><body>\n  <div id="root"></div>\n  <script src="/app.js"><\/script>\n</body></html>\n\n<!-- nothing a crawler can read. #root is empty. -->',
+    bytes: 600,
+    steps: [
+      { m:'GET', p:'/', t:'html', d:'an empty shell — 0.6 kB, no content', gives:'shell' },
+      { m:'GET', p:'/app.js', t:'js', d:'the bundle: 312 kB, must download, parse and execute', gives:'js' },
+      { m:'GET', p:'/api/orders', t:'json', d:'only now does the data get requested', gives:'data' },
+      { m:'—', p:'render', t:'js', d:'JavaScript builds the DOM and the list appears', gives:'content' }
+    ]
+  },
+  hybrid: {
+    label: 'Hybrid',
+    body: '<!-- GET /orders  →  200 text/html, 5.8 kB -->\n<div id="root">\n  <ul><li>#1042 · 1,200</li><li>#1043 · 890</li></ul>\n</div>\n<script>window.__DATA__ = {"orders":[…]}<\/script>\n<script src="/app.js"><\/script>\n\n<!-- the same data twice: once as HTML, once as JSON for hydration -->',
+    bytes: 5800,
+    steps: [
+      { m:'GET', p:'/orders', t:'html', d:'server-rendered markup + the embedded data payload', gives:'content' },
+      { m:'GET', p:'/app.js', t:'js', d:'the bundle: 312 kB — the page looks ready but does not respond yet', gives:'js' },
+      { m:'—', p:'hydrateRoot()', t:'js', d:'JavaScript re-runs the components and attaches handlers', gives:'interactive' }
+    ]
+  }
+};
+
+var mode = 'mpa', client = 'browser', at = 0;
+
+function pick(m){ mode = m; at = 0;
+  document.querySelectorAll('#modebar button').forEach(function(b){ b.classList.toggle('on', b.dataset.m===m); });
+  draw();
+}
+function setClient(c){ client = c; at = 0;
+  document.querySelectorAll('#clientbar button').forEach(function(b){ b.classList.toggle('on', b.dataset.c===c); });
+  draw();
+}
+function reset(){ at = 0; draw(); }
+
+function visibleSteps(){
+  var s = MODES[mode].steps;
+  if (client === 'browser') return s;
+  return s.filter(function(x){ return x.t !== 'js' || x.gives === 'shell'; });   // no JS runs
+}
+
+function step(){ if (at < visibleSteps().length) at++; draw(); }
+function runAll(){ at = visibleSteps().length; draw(); }
+
+function draw(){
+  var steps = visibleSteps();
+  var host = document.getElementById('steps');
+  host.innerHTML = '';
+  steps.forEach(function(s, i){
+    var done = i < at;
+    var el = document.createElement('div');
+    el.className = 'step' + (done ? ' done' : ' pend');
+    el.innerHTML = '<span class="n">' + (done ? '✓' : (i+1)) + '</span>' +
+      '<span><code>' + s.m + ' ' + s.p + '</code> ' +
+      '<span class="tag ' + s.t + '">' + s.t + '</span><br>' +
+      '<span class="d">' + s.d + '</span></span>';
+    host.appendChild(el);
+  });
+  if (client !== 'browser' && MODES[mode].steps.length > steps.length) {
+    var note = document.createElement('div');
+    note.className = 'step';
+    note.innerHTML = '<span class="n">·</span><span class="d">' +
+      (MODES[mode].steps.length - steps.length) +
+      ' step(s) never happen here: no JavaScript runs.</span>';
+    host.appendChild(note);
+  }
+
+  document.getElementById('body').textContent = MODES[mode].body;
+  document.getElementById('next').disabled = at >= steps.length;
+
+  var got = {};
+  steps.slice(0, at).forEach(function(s){ got[s.gives] = true; });
+
+  var screen = document.getElementById('screen'), v = document.getElementById('verdict');
+  screen.innerHTML = ''; v.className = 'verdict';
+
+  if (got.content) {
+    screen.innerHTML = '<div class="row"><strong>Your orders</strong></div>' +
+      '<div class="row">#1042 · 1,200</div><div class="row">#1043 · 890</div>';
+    if (mode === 'hybrid' && !got.interactive && client === 'browser') {
+      v.className = 'verdict warn';
+      v.textContent = 'Visible, but not clickable yet — hydration has not finished. This gap is what INP measures.';
+    } else {
+      v.className = 'verdict ok';
+      v.textContent = client === 'crawler'
+        ? 'The crawler can index this. The text was in the first response.'
+        : 'Content is on screen.';
+    }
+  } else if (got.shell || got.js || got.data) {
+    screen.innerHTML = '<p class="empty">&lt;div id="root"&gt;&lt;/div&gt; — nothing rendered yet</p>';
+    v.className = 'verdict warn';
+    v.textContent = 'The shell arrived and returned 200. Nothing a user or a crawler can read is here yet.';
+  } else if (at === 0) {
+    screen.innerHTML = '<p class="empty">nothing requested yet</p>';
+    v.textContent = 'Press “next request”.';
+  }
+
+  if (at >= steps.length && !got.content) {
+    v.className = 'verdict bad';
+    v.textContent = client === 'crawler'
+      ? 'Finished, and the page is empty. A crawler or link preview sees no content at all.'
+      : 'Finished, and the page is empty. With JavaScript off, this app shows nothing.';
+  }
+}
+
+document.getElementById('c-mpa').textContent = '4.1 kB · content in response 1';
+document.getElementById('c-spa').textContent = '~313 kB · content after 3 requests';
+document.getElementById('c-hybrid').textContent = '5.8 kB visible, ~318 kB interactive';
+draw();
+</script>
+</main></body></html>

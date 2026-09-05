@@ -7,7 +7,8 @@ Study-note series for the 10-week bootcamp. Click a week to open its study pack.
 | 1 | How backend works | [class-01-study-pack](class-01-study-pack/class-01-how-backend-systems-work-study-guide.md) |
 | 2 | Networking part 1: the internet, addresses, DNS, HTTP | [class-02-study-pack](class-02-study-pack/class-02-networking-study-guide.md) |
 | 2 | Networking part 2: HTTPS, SSH, SMTP | [class-02-study-pack](class-02-study-pack/class-02-networking-part-two-study-guide.md) |
-| 3 | API, Monolithing app, REST, GraphQL | Coming soon |
+| 3 | API, Monolithic app part 1: the simplest backend, APIs, monolith vs microservices, rendering, deployment | [class-03-study-pack](class-03-study-pack/class-03-api-monolith-rest-graphql-part-one-study-guide.md) |
+| 3 | REST, GraphQL part 2 | Coming soon |
 | 4 | Authentication, Authorization and security basics | Coming soon |
 | 5 | Database and Data storages | Coming soon |
 | 6 | Caching | Coming soon |
